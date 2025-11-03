@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760057810 -0500	commit (initial): deploy
+11d841031f84fa87fbcd89d16966ab95f3dac2fc 0000000000000000000000000000000000000000 Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760057822 -0500	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760057822 -0500	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 4886e1142fe6a91519c4b0dee1f5f5fb224b470e Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760058177 -0500	commit (initial): Reinicio total de la rama
+4886e1142fe6a91519c4b0dee1f5f5fb224b470e 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760058222 -0500	checkout: moving from temp_branch to main
+11d841031f84fa87fbcd89d16966ab95f3dac2fc 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760058272 -0500	reset: moving to HEAD
+11d841031f84fa87fbcd89d16966ab95f3dac2fc 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760058534 -0500	checkout: moving from main to main
+11d841031f84fa87fbcd89d16966ab95f3dac2fc 11d841031f84fa87fbcd89d16966ab95f3dac2fc Jefferson Diego Curi Untiveros <73031584@continental.edu.pe> 1760058551 -0500	reset: moving to 11d8410
