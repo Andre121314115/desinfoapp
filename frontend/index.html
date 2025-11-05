@@ -4,273 +4,210 @@
   <meta charset="utf-8" />
   <title>Detector de Desinformación</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
-  <header>Detector de Desinformación</header>
-
-  <main>
-    <p>
-      Ingresa un titular y texto de una noticia. El sistema analizará su nivel de veracidad
-      utilizando inteligencia artificial (Gemini 2.5 Flash con búsqueda en la web) y mostrará el puntaje de riesgo.
-    </p>
-
-    <label for="source">Fuente / Medio</label>
-    <input id="source" placeholder="Ej: Diario de Huancayo" />
-
-    <label for="title">Título</label>
-    <input id="title" placeholder="Ej: El sol saldrá por el oeste mañana" />
-
-    <label for="body">Cuerpo</label>
-    <textarea id="body" placeholder="Pega aquí el contenido de la noticia"></textarea>
-
-    <button id="btnAnalyze">Analizar</button>
-
-    <div id="result" class="result" style="display:none"></div>
-
-    <!-- 📊 MÉTRICAS -->
-    <section class="metrics-wrap" aria-label="Métricas de análisis">
-      <div class="metrics-grid">
-        <article class="metric-card">
-          <div class="metric-kpi" id="kpiTotal">0</div>
-          <div class="metric-label">Análisis totales</div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-kpi" id="kpiAvgScore">0.0</div>
-          <div class="metric-label">Score promedio</div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-kpi" id="kpiAvgLatency">0 ms</div>
-          <div class="metric-label">Latencia media</div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-kpi" id="kpiHighRisk">0</div>
-          <div class="metric-label">Alto riesgo (≥75)</div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-kpi small" id="kpiVerdicts">—</div>
-          <div class="metric-label">Veredictos (C/D/F/NV)</div>
-        </article>
+  <!-- Barra de navegación superior -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <img src="assets/images/logo.png" alt="Desinfoia Logo" class="logo">
+        <span class="brand-text">Detector de Desinformación</span>
       </div>
-      <div class="metrics-note muted">* C: creíble, D: dudosa, F: falsa, NV: no verificable</div>
-    </section>
-
-    <div class="top-actions">
-      <h2>Historial de análisis</h2>
-      <div>
-        <input id="search" placeholder="Buscar..." class="input-search" />
+      
+      <div class="navbar-search">
+        <input type="text" id="search" placeholder="Buscar noticias por título o fuente" class="search-input">
+      </div>
+      
+      <div class="navbar-actions">
         <button id="btnReload" class="btn-secondary">Actualizar</button>
         <button id="btnExport" class="btn-success">Exportar CSV</button>
       </div>
     </div>
+  </header>
 
-    <div id="history" class="history">
-      <p class="muted">Aún no hay análisis registrados.</p>
-    </div>
+  <div class="main-container">
+    <!-- Sidebar lateral -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="analyze">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Analizar Noticia</span>
+        </a>
+        <a href="#" class="nav-item" data-section="history">
+          <span class="nav-icon">📚</span>
+          <span class="nav-text">Historial</span>
+        </a>
+        <a href="#" class="nav-item" data-section="datasets">
+          <span class="nav-icon">🗃️</span>
+          <span class="nav-text">Datasets</span>
+        </a>
+        <!-- ✅ NUEVA SECCIÓN: Calibración -->
+        <a href="#" class="nav-item" data-section="calibration">
+          <span class="nav-icon">🔧</span>
+          <span class="nav-text">Calibración</span>
+        </a>
+        <div class="nav-divider"></div>
+        <a href="#" class="nav-item" data-section="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-text">Configuración</span>
+        </a>
+      </nav>
+    </aside>
 
-    <!-- 🚀 NUEVO BLOQUE: Subida de Dataset -->
-    <section class="upload-section">
-      <h2>Subir Dataset</h2>
-      <input type="file" id="datasetFile" accept=".csv, .xlsx" />
-      <button onclick="uploadDataset()">Cargar Dataset</button>
-      <p id="uploadMessage" class="muted"></p>
-    </section>
+    <!-- Contenido principal -->
+    <main class="content">
+      <!-- SECCIÓN ANALIZAR -->
+      <section id="analyze-section" class="content-section active">
+        <div class="content-card">
+          <div class="card-header">
+            <h1 class="card-title">Enviar Noticia para Análisis</h1>
+            <p class="card-subtitle">
+              Ingresa un titular y texto de una noticia. El sistema analizará su nivel de veracidad
+              utilizando inteligencia artificial (Gemini 2.5 Flash + ML) y mostrará el puntaje de riesgo.
+            </p>
+          </div>
+          
+          <div class="news-form">
+            <div class="form-group">
+              <label for="source" class="form-label">Fuente / Medio</label>
+              <input type="text" id="source" class="form-input" placeholder="Ej: Diario de Huancayo">
+            </div>
+            
+            <div class="form-group">
+              <label for="title" class="form-label">Título</label>
+              <input type="text" id="title" class="form-input" placeholder="Ej: El sol saldrá por el oeste mañana">
+            </div>
+            
+            <div class="form-group">
+              <label for="body" class="form-label">Cuerpo</label>
+              <textarea id="body" class="form-textarea" placeholder="Pega aquí el contenido de la noticia" rows="10"></textarea>
+            </div>
+            
+            <button id="btnAnalyze" class="submit-btn">🔍 Analizar Noticia</button>
+          </div>
 
-  </main>
+          <div id="result" class="result" style="display:none">
+            <!-- Resultado se llena dinámicamente con JavaScript -->
+          </div>
+        </div>
 
-  <script>
-    // Cambia esto a tu dominio en producción, ej: "https://api.tu-dominio.com"
-    const API = "http://localhost:3000";
+        <!-- MÉTRICAS -->
+        <section class="metrics-wrap content-card" aria-label="Métricas de análisis">
+          <h2>📈 Métricas del Sistema</h2>
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <div class="metric-kpi" id="kpiTotal">0</div>
+              <div class="metric-label">Análisis totales</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-kpi" id="kpiAvgScore">0.0</div>
+              <div class="metric-label">Score promedio</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-kpi" id="kpiAvgLatency">0 ms</div>
+              <div class="metric-label">Latencia media</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-kpi" id="kpiHighRisk">0</div>
+              <div class="metric-label">Alto riesgo (≥75)</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-kpi small" id="kpiVerdicts">—</div>
+              <div class="metric-label">Veredictos (C/D/F/NV)</div>
+            </article>
+          </div>
+          <div class="metrics-note muted">* C: creíble, D: dudosa, F: falsa, NV: no verificable</div>
+        </section>
+      </section>
 
-    const $ = (q)=>document.querySelector(q);
-    const btn = $("#btnAnalyze");
-    const resultBox = $("#result");
-    const historyBox = $("#history");
+      <!-- SECCIÓN HISTORIAL -->
+      <section id="history-section" class="content-section">
+        <div class="content-card">
+          <div class="top-actions">
+            <h2>📚 Historial de Análisis</h2>
+          </div>
+          <div id="history" class="history">
+            <p class="muted">Aún no hay análisis registrados.</p>
+          </div>
+        </div>
+      </section>
 
- btn.addEventListener("click", async ()=>{
-  const data = {
-    source: $("#source").value.trim(),
-    title: $("#title").value.trim(),
-    body: $("#body").value.trim()
-  };
-  if(!data.title && !data.body) return alert("Ingresa al menos título o cuerpo.");
+      <!-- SECCIÓN DATASETS -->
+      <section id="datasets-section" class="content-section">
+        <div class="content-card upload-section">
+          <h2>🗃️ Subir Dataset</h2>
+          <p class="card-subtitle">Carga archivos CSV o Excel con noticias para entrenar y calibrar el sistema.</p>
+          
+          <div class="form-group">
+            <label for="datasetFile" class="form-label">Seleccionar archivo</label>
+            <input type="file" id="datasetFile" accept=".csv, .xlsx" class="form-input" />
+          </div>
+          
+          <button id="btnUploadDataset" class="submit-btn">📤 Cargar Dataset</button>
+          <p id="uploadMessage" class="muted"></p>
+        </div>
+      </section>
 
-  btn.disabled = true;
-  btn.textContent = "Analizando...";
+      <!-- ✅ NUEVA SECCIÓN: CALIBRACIÓN HU07 -->
+      <section id="calibration-section" class="content-section">
+        <div class="content-card">
+          <div class="card-header">
+            <h1 class="card-title">🔧 Calibración del Sistema</h1>
+            <p class="card-subtitle">
+              HU07: Recalibra los puntajes de veracidad basándose en coincidencias con el dataset local.
+              Mejora la precisión del sistema automáticamente.
+            </p>
+          </div>
 
-  try {
-    const res = await fetch(API + "/analyze", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error || "Error en análisis");
+          <!-- Estadísticas de calibración -->
+          <div class="calibration-stats">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value" id="calibrationAccuracy">—%</div>
+                <div class="stat-label">Precisión Promedio</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="calibratedCount">0</div>
+                <div class="stat-label">Análisis Calibrados</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="calibrationRate">—%</div>
+                <div class="stat-label">Tasa de Calibración</div>
+              </div>
+            </div>
+          </div>
 
-    // ✅ CORREGIDO - Nueva estructura con ML
-    const resultData = json.result;
-    const final = resultData.final || {};
-    const gemini = resultData.gemini || {};
+          <!-- Acciones de calibración -->
+          <div class="calibration-actions">
+            <button id="btnRunCalibration" class="submit-btn">🔄 Ejecutar Calibración</button>
+            <button id="btnViewCalibrationLog" class="btn-secondary">📋 Ver Registros</button>
+          </div>
 
-    // Usar los datos finales combinados (ML + Gemini)
-    const score = final.score || gemini.score;
-    const verdict = final.verdict || gemini.verdict;
-    const rationale = final.explanation || gemini.rationale;
-    const labels = gemini.labels || [];
-    const evidence = gemini.evidence || [];
+          <!-- Resultados de calibración -->
+          <div id="calibrationResults" class="results-container" style="display: none;"></div>
+          
+          <!-- Registro de calibraciones -->
+          <div id="calibrationLog" class="calibration-log" style="display: none;">
+            <h3>📊 Registro de Calibraciones</h3>
+            <div id="calibrationLogContent">
+              <p class="muted">No hay registros de calibración disponibles.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    // Mostrar info del ML en consola
-    if (resultData.ml) {
-      console.log("✅ ML activo - Veredicto:", resultData.ml.ml_verdict, "Score:", resultData.ml.ml_score);
-    }
+      <!-- SECCIÓN CONFIGURACIÓN -->
+      <section id="settings-section" class="content-section">
+        <div class="content-card">
+          <h2>⚙️ Configuración</h2>
+          <p class="muted">Panel de configuración del sistema en desarrollo...</p>
+        </div>
+      </section>
+    </main>
+  </div>
 
-    const verdictBadgeColor =
-      verdict === "falsa" ? "#dc2626" :
-      verdict === "dudosa" ? "#d97706" :
-      verdict === "no_verificable" ? "#64748b" : "#16a34a";
-
-    resultBox.style.display = "block";
-    resultBox.innerHTML = `
-      <div class="score">
-        Score: ${score}
-        <span class="verdict-badge" style="background:${verdictBadgeColor}">
-          ${String(verdict || '').toUpperCase() || "—"}
-        </span>
-      </div>
-      <div><strong>Etiquetas:</strong> ${
-        (labels||[]).map(x=>`<span class="pill">${x}</span>`).join(" ") || "—"
-      }</div>
-      <div class="mt-8"><strong>Explicación:</strong> ${rationale || "—"}</div>
-      <div class="mt-8"><strong>Evidencia:</strong>
-        <ul class="evidence-list">
-          ${
-            (evidence||[]).map(ev => `
-              <li>
-                <div class="claim"><em>${ev.claim || "—"}</em> — <b>${ev.assessment || "incierto"}</b></div>
-                <div class="sources">
-                  ${(ev.sources||[]).slice(0,3).map(u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`).join("<br/>") || "—"}
-                </div>
-              </li>
-            `).join("") || "<li>—</li>"
-          }
-        </ul>
-      </div>
-      ${resultData.ml ? `<div class="mt-8 ml-info"><small>🤖 Análisis mejorado con ML (${resultData.ml.ml_features_used} características)</small></div>` : ''}
-    `;
-    await loadHistory();
-  } catch(e) {
-    console.error(e);
-    alert("Error al conectar con la API");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Analizar";
-  }
-});
-
-    // --- 📤 FUNCIÓN NUEVA: subir dataset ---
-   function uploadDataset() {
-    const fileInput = document.getElementById('datasetFile');
-    const file = fileInput.files[0];
-    if (!file) return alert('Selecciona un archivo');
-
-    const formData = new FormData();
-    formData.append('file', file); // ✅ CORREGIDO (antes: 'dataset')
-
-    const headers = new Headers();
-    const userPass = btoa('admin:1234'); // mismo usuario y contraseña del backend
-    headers.append('Authorization', 'Basic ' + userPass);
-
-    fetch(API + '/upload-dataset', { method: 'POST', body: formData, headers })
-      .then(res => res.json())
-      .then(data => {
-          document.getElementById('uploadMessage').innerText = data.message;
-          console.log("✅ Respuesta del backend:", data);
-      })
-      .catch(err => {
-          console.error("❌ Error subiendo dataset:", err);
-          document.getElementById('uploadMessage').innerText = "Error al subir el dataset.";
-      });
-  }
-    // --- Historial + Métricas ---
-    async function loadHistory(q="") {
-      try {
-        const res = await fetch(API + "/history?q=" + encodeURIComponent(q));
-        const json = await res.json();
-        if(!json.ok) throw new Error("Fallo en /history");
-        const arr = json.items || [];
-        renderMetrics(arr);
-
-        if(!arr.length){
-          historyBox.innerHTML = `<p class="muted">Sin resultados.</p>`;
-          return;
-        }
-
-        const rows = arr.map(x => {
-          const verdict = x.verdict || "—";
-          const verdictColor =
-            verdict === "falsa" ? "#dc2626" :
-            verdict === "dudosa" ? "#d97706" :
-            verdict === "no_verificable" ? "#64748b" : "#16a34a";
-
-          return `
-            <tr>
-              <td>${new Date(x.created_at).toLocaleString()}</td>
-              <td>${x.source || "—"}</td>
-              <td>${x.title || "—"}</td>
-              <td style="font-weight:600;color:${x.score>75?"#dc2626":x.score>50?"#d97706":"#16a34a"}">${x.score}</td>
-              <td><span class="verdict-chip" style="background:${verdictColor}">${String(verdict).toUpperCase()}</span></td>
-              <td>${(x.labels||[]).join(", ")}</td>
-              <td>${x.rationale || "—"}</td>
-            </tr>
-          `;
-        }).join("");
-
-        historyBox.innerHTML = `
-          <table>
-            <thead><tr>
-              <th>Fecha</th><th>Fuente</th><th>Título</th><th>Score</th><th>Veredicto</th><th>Etiquetas</th><th>Explicación</th>
-            </tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-          <p class="muted">Total: ${json.total}</p>
-        `;
-      } catch(e) {
-        console.error(e);
-        historyBox.innerHTML = `<p class="muted">No se pudo cargar historial.</p>`;
-        renderMetrics([]);
-      }
-    }
-
-    function renderMetrics(items){
-      const total = items.length;
-      const avg = total ? (items.reduce((s,x)=>s+(Number(x.score)||0),0)/total) : 0;
-      const lat = total ? (items.reduce((s,x)=>s+(Number(x.latency_ms)||0),0)/total) : 0;
-      const high = items.filter(x => (Number(x.score)||0) >= 75).length;
-
-      const counts = items.reduce((acc, x)=>{
-        const v = (x.verdict || "nv").toLowerCase();
-        if(v.startsWith("cre")) acc.c++;
-        else if(v.startsWith("dud")) acc.d++;
-        else if(v.startsWith("fal")) acc.f++;
-        else acc.nv++;
-        return acc;
-      }, {c:0,d:0,f:0,nv:0});
-
-      $("#kpiTotal").textContent = total;
-      $("#kpiAvgScore").textContent = avg.toFixed(1);
-      $("#kpiAvgLatency").textContent = `${Math.round(lat)} ms`;
-      $("#kpiHighRisk").textContent = high;
-      $("#kpiVerdicts").textContent = `C:${counts.c} • D:${counts.d} • F:${counts.f} • NV:${counts.nv}`;
-    }
-
-    $("#btnReload").addEventListener("click", ()=> loadHistory($("#search").value.trim()));
-    $("#btnExport").addEventListener("click", ()=> window.open(API + "/export/csv", "_blank"));
-    $("#search").addEventListener("keyup", e=>{
-      if(e.key==="Enter") loadHistory($("#search").value.trim());
-    });
-
-    loadHistory();
-    
-  </script>
+  <script src="js/main.js"></script>
 </body>
 </html>

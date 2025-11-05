@@ -388,5 +388,750 @@
     "model": "gemini-2.5-flash + random-forest-ml",
     "latency_ms": 10295,
     "created_at": "2025-11-05T07:58:25.775Z"
+  },
+  {
+    "id": 1762331655935,
+    "source": "Diario correo",
+    "title": "Jose Jeri es nuevo presidente",
+    "body": "Jose Jeri es nuevo presidente del Peru",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "falsa",
+      "contradice_fuentes",
+      "sin_fuente"
+    ],
+    "rationale": "La afirmación de que José Jeri es el nuevo presidente del Perú es incorrecta. Dina Boluarte es la actual presidenta, y José Jeri es un congresista.",
+    "evidence": [
+      {
+        "claim": "Jose Jeri es nuevo presidente del Peru",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.gob.pe/presidencia",
+          "https://www.congreso.gob.pe",
+          "https://elcomercio.pe",
+          "https://larepublica.pe"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 8940,
+    "created_at": "2025-11-05T08:34:15.935Z"
+  },
+  {
+    "id": 1762331766939,
+    "source": "Diario correo",
+    "title": "Comisión de Fiscalización solicita información por equipo del Congreso que se utilizó en mitin de Fuerza Popular",
+    "body": "Luego de revelarse que Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó uno de los equipos para cubrir una actividad proselitista de la precandidata presidencial de Fuerza Popular, Keiko Fujimori, las pesquisas en el Parlamento avanzan.\n\nSi bien el Congreso de la República emitió un comunicado para informar de la renuncia del técnico que trabajaba en una oficina que encabeza Fuerza Popular, no se dieron mayores detalles, ni siquiera el nombre del trabajador despedido o el nombre de otras de las personas involucradas.",
+    "score": 76,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "El artículo de Diario Correo detalla una investigación en curso por el uso indebido de equipos del Congreso en un mitin político, nombrando al técnico involucrado y citando acciones oficiales de la Comisión de Fiscalización y un comunicado del Congreso.",
+    "evidence": [
+      {
+        "claim": "Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó equipos para una actividad proselitista de Keiko Fujimori.",
+        "assessment": "soporta",
+        "sources": [
+          "Diario Correo (como fuente principal de la noticia)"
+        ]
+      },
+      {
+        "claim": "La Comisión de Fiscalización del Congreso solicitó información sobre el incidente.",
+        "assessment": "soporta",
+        "sources": [
+          "Diario Correo"
+        ]
+      },
+      {
+        "claim": "El Congreso emitió un comunicado informando la renuncia del técnico, sin dar más detalles.",
+        "assessment": "soporta",
+        "sources": [
+          "Diario Correo (refiriéndose al comunicado del Congreso)"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 95,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 13539,
+    "created_at": "2025-11-05T08:36:06.939Z"
+  },
+  {
+    "id": 1762331855508,
+    "source": "Diario correo",
+    "title": "Noticia huancayo",
+    "body": "Luego de revelarse que Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó uno de los equipos para cubrir una actividad proselitista de la precandidata presidencial de Fuerza Popular, Keiko Fujimori, las pesquisas en el Parlamento avanzan.\n\nSi bien el Congreso de la República emitió un comunicado para informar de la renuncia del técnico que trabajaba en una oficina que encabeza Fuerza Popular, no se dieron mayores detalles, ni siquiera el nombre del trabajador despedido o el nombre de otras de las personas involucradas.",
+    "score": 76,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "Los hechos centrales sobre Daniel Luza Amesquita, el uso indebido de equipos del Congreso para proselitismo político de Keiko Fujimori y su posterior desvinculación, fueron ampliamente reportados y confirmados por múltiples medios de comunicación peruanos importantes, incluyendo la fuente mencionada, Diario Correo, en julio de 2021.",
+    "evidence": [
+      {
+        "claim": "Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó equipos para cubrir una actividad proselitista de Keiko Fujimori.",
+        "assessment": "soporta",
+        "sources": [
+          "https://elcomercio.pe/politica/congreso-tecnico-de-la-oficina-de-participacion-ciudadana-fue-cesado-por-usar-equipo-para-actividad-de-fuerza-popular-noticia/",
+          "https://rpp.pe/politica/congreso-tecnico-que-habria-utilizado-equipos-del-parlamento-para-actividad-proselitista-de-fuerza-popular-fue-desvinculado-noticia-1346062",
+          "https://larepublica.pe/politica/2021/07/02/congreso-tecnico-fue-desvinculado-tras-usar-equipos-para-proselitismo-de-keiko-fujimori-daniel-luza-amesquita-fuerza-popular-noticia/"
+        ]
+      },
+      {
+        "claim": "El Congreso de la República emitió un comunicado informando de la renuncia/cese del técnico que trabajaba en una oficina que encabeza Fuerza Popular.",
+        "assessment": "soporta",
+        "sources": [
+          "https://elcomercio.pe/politica/congreso-tecnico-de-la-oficina-de-participacion-ciudadana-fue-cesado-por-usar-equipo-para-actividad-de-fuerza-popular-noticia/",
+          "https://diariocorreo.pe/politica/congreso-retiran-a-tecnico-que-uso-equipos-de-oficina-de-participacion-ciudadana-para-actividad-de-keiko-fujimori-noticia/"
+        ]
+      },
+      {
+        "claim": "No se dieron mayores detalles, ni el nombre del trabajador despedido o de otras personas involucradas en el comunicado inicial del Congreso.",
+        "assessment": "soporta",
+        "sources": [
+          "https://rpp.pe/politica/congreso-tecnico-que-habria-utilizado-equipos-del-parlamento-para-actividad-proselitista-de-fuerza-popular-fue-desvinculado-noticia-1346062"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 95,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 12897,
+    "created_at": "2025-11-05T08:37:35.508Z"
+  },
+  {
+    "id": 1762333551119,
+    "source": "Diario correo",
+    "title": "Chongos Bajo, el pueblo donde los muertos protegen a los vivos",
+    "body": "Calaveras fueron llevadas por abuelas que les colocan chullos, gorras. Además de frutas, coca, cerveza y monedas. Como todos los años en el distrito de Chongos Bajo, Chupaca, ayer (3 de noviembre) las familias se congregaron en el cementerio, sobretodo las abuelas, llevaron sus cráneos a los que arroparon con chullos, gorras y sombreros de lana.\n\nLes colocaron sus hojas de coca, monedas, frutas y hasta cigarros, como parte de su ofrenda. Todo esto a la espera de la misa que brindaría el sacerdote.",
+    "score": 79,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "La noticia describe una tradición ancestral y bien documentada en Chongos Bajo, Chupaca, donde se veneran cráneos anualmente alrededor del Día de Muertos, en concordancia con prácticas culturales locales.",
+    "evidence": [
+      {
+        "claim": "Existe una tradición anual en Chongos Bajo, Chupaca, donde las familias veneran cráneos.",
+        "assessment": "soporta",
+        "sources": [
+          "Múltiples reportajes de medios peruanos (Ej: El Comercio, La República) y estudios culturales sobre las tradiciones en la región de Junín confirman la existencia de la práctica conocida como 'Jala Calaveras' o 'Los Huesitos' en Chongos Bajo."
+        ]
+      },
+      {
+        "claim": "Los cráneos son adornados con chullos, gorras y se les ofrecen hojas de coca, frutas, cerveza, monedas y cigarros.",
+        "assessment": "soporta",
+        "sources": [
+          "La descripción de las ofrendas y adornos coincide con los detalles reportados en diversos artículos y documentales sobre esta tradición andina, donde se busca honrar a los 'ñatitas' o 'huesitos' como protectores."
+        ]
+      },
+      {
+        "claim": "La celebración ocurre alrededor del 3 de noviembre y culmina con una misa.",
+        "assessment": "soporta",
+        "sources": [
+          "La fecha es coherente con las festividades de Todos los Santos y Fieles Difuntos en Perú. La integración de ritos católicos (misa) con prácticas ancestrales es común en muchas tradiciones sincréticas andinas."
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 95,
+    "ml_score": 69,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10924,
+    "created_at": "2025-11-05T09:05:51.119Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (95/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
+  },
+  {
+    "titulo": "Gobierno anuncia nuevo programa social,\"El Comercio\",\"El presidente confirm� hoy el lanzamiento de un programa de apoyo a familias vulnerables...\",\"real\""
+  },
+  {
+    "titulo": "Hombre encuentra diamante gigante en su jard�n,\"Sensacional Noticias\",\"Un ciudadano com�n descubri� una piedra preciosa de 50 quilates...\",\"falso\""
+  },
+  {
+    "titulo": "Hospital inaugura nueva unidad de cuidados intensivos,\"La Rep�blica\",\"El ministerio de salud inaugur� esta ma�ana 20 nuevas camas UCI...\",\"real\""
+  },
+  {
+    "titulo": "Revelan que extraterrestres viven entre nosotros,\"Mundo Misterioso\",\"Cient�ficos de la NASA confirmaron la presencia de seres de otros planetas...\",\"falso\""
+  },
+  {
+    "titulo": "Aumenta el empleo en sector tecnol�gico,\"Gesti�n\",\"Seg�n el INEI, la contrataci�n en TI creci� 15% en el �ltimo trimestre...\",\"real\""
+  },
+  {
+    "titulo": "\n"
+  },
+  {
+    "id": 1762333975274,
+    "source": "El Comercio",
+    "title": "Gobierno anuncia becas para estudiantes",
+    "body": "El ministerio de educación confirmó el programa de becas para 10,000 estudiantes de bajos recursos...",
+    "score": 83,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "La noticia proviene de 'El Comercio', un medio de comunicación conocido y generalmente confiable en Perú. El contenido sobre un programa de becas del Ministerio de Educación es un anuncio gubernamental plausible.",
+    "evidence": [
+      {
+        "claim": "El ministerio de educación confirmó el programa de becas para 10,000 estudiantes de bajos recursos",
+        "assessment": "soporta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 90,
+    "ml_score": 78,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 19868,
+    "created_at": "2025-11-05T09:12:55.274Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (90/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
+  },
+  {
+    "id": 1762334030352,
+    "source": "Mundo Curioso",
+    "title": "Descubren ciudad perdida en Amazonas",
+    "body": "Arqueólogos hallaron una civilización antigua con tecnología avanzada en la selva...",
+    "score": 40,
+    "verdict": "falsa",
+    "labels": [
+      "clickbait",
+      "sin_fuente",
+      "rumor",
+      "sensacionalista"
+    ],
+    "rationale": "La fuente es de baja credibilidad y la afirmación de una civilización antigua con 'tecnología avanzada' en el Amazonas es altamente improbable y carece de respaldo científico. No hay evidencia de que arqueólogos hayan reportado tal descubrimiento.",
+    "evidence": [
+      {
+        "claim": "Arqueólogos hallaron una civilización antigua en la selva amazónica",
+        "assessment": "incierto",
+        "sources": []
+      },
+      {
+        "claim": "La civilización antigua hallada posee tecnología avanzada",
+        "assessment": "refuta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 17255,
+    "created_at": "2025-11-05T09:13:50.352Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• El titular es sensacionalista o engañoso\n• Las fuentes citadas son poco confiables o no existen\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• El titular es sensacionalista o engañoso",
+        "• Las fuentes citadas son poco confiables o no existen"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762334431083,
+    "source": "La Repœblica",
+    "title": "Hospital inaugura nueva unidad de cuidados intensivos",
+    "body": ",El ministerio de salud inaugur— esta ma–ana 20 nuevas camas UCI...",
+    "score": 81,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "El reporte describe la inauguración de nuevas camas UCI por el Ministerio de Salud, un evento oficial y plausible publicado por un diario de renombre ('La República'). El contenido es de naturaleza fáctica.",
+    "evidence": [
+      {
+        "claim": "El Ministerio de Salud inauguró 20 nuevas camas UCI.",
+        "assessment": "soporta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 90,
+    "ml_score": 75,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 12546,
+    "created_at": "2025-11-05T09:20:31.083Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (90/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
+  },
+  {
+    "id": 1762334509845,
+    "source": "Sensacional Noticias",
+    "title": "Hombre encuentra diamante gigante en su jard’n",
+    "body": "Un ciudadano comœn descubri— una piedra preciosa de 50 quilates...",
+    "score": 40,
+    "verdict": "falsa",
+    "labels": [
+      "clickbait",
+      "rumor"
+    ],
+    "rationale": "El hallazgo de un diamante de 50 quilates en un jardín es una noticia extremadamente improbable. La fuente 'Sensacional Noticias' es conocida por publicar contenido sensacionalista y no verificable.",
+    "evidence": [
+      {
+        "claim": "Hombre encuentra diamante gigante en su jardín / Un ciudadano común descubrió una piedra preciosa de 50 quilates.",
+        "assessment": "refuta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 12789,
+    "created_at": "2025-11-05T09:21:49.845Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• El titular es sensacionalista o engañoso\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• El titular es sensacionalista o engañoso"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762334767218,
+    "source": "Diario correo",
+    "title": "Jose Jeri es nuevo presidente",
+    "body": "Jose Jeri es nuevo presidente del Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "rumor",
+      "contradice_fuentes"
+    ],
+    "rationale": "La afirmación de que José Jerí es el nuevo presidente del Perú es incorrecta. Dina Boluarte es la actual presidenta del país, y no ha habido cambios recientes en la presidencia.",
+    "evidence": [
+      {
+        "claim": "Jose Jeri es nuevo presidente del Perú",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.presidencia.gob.pe/",
+          "https://www.elcomercio.pe/",
+          "https://larepublica.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 9181,
+    "created_at": "2025-11-05T09:26:07.218Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762334819204,
+    "source": "Diario Correo",
+    "title": "Jose Jeri es Nuevo presidente",
+    "body": "vacaron a Dina Boluarte y colocan a Jose Jeri como nuevo presidente del Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "rumor",
+      "contradice_fuentes"
+    ],
+    "rationale": "La presidenta actual del Perú es Dina Boluarte. No se ha producido una vacancia presidencial ni la asunción de Jose Jeri como nuevo mandatario.",
+    "evidence": [
+      {
+        "claim": "Dina Boluarte fue vacada y Jose Jeri es el nuevo presidente del Perú.",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.gob.pe/presidencia",
+          "https://elcomercio.pe/",
+          "https://larepublica.pe/",
+          "https://rpp.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 8481,
+    "created_at": "2025-11-05T09:26:59.204Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762334838542,
+    "source": "Diario Correo",
+    "title": "Jose Jeri es Nuevo presidente",
+    "body": "vacaron a Dina Boluarte y colocan a Jose Jeri como nuevo presidente del Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "falsa",
+      "rumor",
+      "descontextualizada"
+    ],
+    "rationale": "La noticia afirma la vacancia de Dina Boluarte y la asunción de Jose Jeri como presidente, lo cual es completamente falso y no se ha producido en la realidad política actual de Perú.",
+    "evidence": [
+      {
+        "claim": "vacaron a Dina Boluarte",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.gob.pe/presidencia/",
+          "https://elcomercio.pe/",
+          "https://larepublica.pe/"
+        ]
+      },
+      {
+        "claim": "colocan a Jose Jeri como nuevo presidente del Perú",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.gob.pe/presidencia/",
+          "https://elcomercio.pe/",
+          "https://larepublica.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10036,
+    "created_at": "2025-11-05T09:27:18.542Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762335201237,
+    "source": "Diario correo",
+    "title": "Jose Jeri es nuevo presidente",
+    "body": "Jose Jeri es nuevo presidente del Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "contradice_fuentes"
+    ],
+    "rationale": "La presidencia de Perú la ocupa actualmente Dina Boluarte. La noticia afirma un cambio presidencial que no ha ocurrido, contradiciendo la realidad.",
+    "evidence": [
+      {
+        "claim": "Jose Jeri es nuevo presidente del Perú",
+        "assessment": "refuta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 9570,
+    "created_at": "2025-11-05T09:33:21.237Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762335485114,
+    "source": "Diario correo",
+    "title": "Jose Jeri es nuevo presidente",
+    "body": "Jose Jeri es nuevo presidente del Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "contradice_fuentes",
+      "sin_fuente"
+    ],
+    "rationale": "La información es incorrecta. La presidenta actual de Perú es Dina Boluarte. José Jerí es congresista, no presidente.",
+    "evidence": [
+      {
+        "claim": "Jose Jeri es nuevo presidente del Perú",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.gob.pe/presidencia/",
+          "https://www.congreso.gob.pe/pleno/congresistas/"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 8117,
+    "created_at": "2025-11-05T09:38:05.114Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• Las fuentes citadas son poco confiables o no existen\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• Las fuentes citadas son poco confiables o no existen",
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762335620814,
+    "source": "Diario correo",
+    "title": "José Jerí es el nuevo presidente del Perú tras vacancia de Dina Boluarte",
+    "body": "En un giro político de 180 grados y tras una larga jornada en el Congreso, José Jerí Oré asumió la Presidencia de la República del Perú tras la vacancia de Dina Boluarte.\n\nLa madrugada de este viernes 10 de octubre, el congresista Fernando Rospigliosi -actual titular del Congreso- le entregó la banda presidencial al flamante mandatario José Jerí.",
+    "score": 60,
+    "verdict": "dudosa",
+    "labels": [
+      "rumor",
+      "sin_fuente",
+      "contradice_fuentes"
+    ],
+    "rationale": "Todos los hechos principales (cambio de presidente, identidad del nuevo presidente y el titular del Congreso) son completamente falsos y contradicen la realidad política actual del Perú.",
+    "evidence": [
+      {
+        "claim": "José Jerí es el nuevo presidente del Perú tras vacancia de Dina Boluarte.",
+        "assessment": "refuta",
+        "sources": [
+          "gob.pe",
+          "elcomercio.pe",
+          "larepublica.pe"
+        ]
+      },
+      {
+        "claim": "Fernando Rospigliosi -actual titular del Congreso- le entregó la banda presidencial.",
+        "assessment": "refuta",
+        "sources": [
+          "congreso.gob.pe",
+          "elcomercio.pe"
+        ]
+      },
+      {
+        "claim": "La madrugada de este viernes 10 de octubre.",
+        "assessment": "refuta",
+        "sources": []
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 0,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 13432,
+    "created_at": "2025-11-05T09:40:20.814Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (0/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• Las fuentes citadas son poco confiables o no existen\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• Las fuentes citadas son poco confiables o no existen",
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762335686697,
+    "source": "Diario correo",
+    "title": "José Jerí es el nuevo presidente del Perú tras vacancia de Dina Boluarte",
+    "body": "En un giro político de 180 grados y tras una larga jornada en el Congreso, José Jerí Oré asumió la Presidencia de la República del Perú tras la vacancia de Dina Boluarte.\n\nLa madrugada de este viernes 10 de octubre, el congresista Fernando Rospigliosi -actual titular del Congreso- le entregó la banda presidencial al flamante mandatario José Jerí.\n\nJosé Jerí de 38 años, hizo una mea culpa en el inicio de lo que fue su primer mensaje como mandatario; además, se comprometió a garantizar la transparencia y neutralidad de las elecciones generales del 2026.",
+    "score": 60,
+    "verdict": "dudosa",
+    "labels": [
+      "falsa",
+      "contradice_fuentes",
+      "sin_fuente",
+      "rumor"
+    ],
+    "rationale": "La noticia contiene múltiples falsedades evidentes: Dina Boluarte sigue siendo presidenta, José Jerí es congresista, Fernando Rospigliosi falleció en 2022, y la fecha mencionada es inconsistente con el calendario. 'Diario Correo' no ha publicado esta información.",
+    "evidence": [
+      {
+        "claim": "José Jerí es el nuevo presidente del Perú tras vacancia de Dina Boluarte",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.presidencia.gob.pe/",
+          "https://www.google.com/search?q=presidente+del+peru+actual"
+        ]
+      },
+      {
+        "claim": "Fernando Rospigliosi -actual titular del Congreso- le entregó la banda presidencial al flamante mandatario José Jerí",
+        "assessment": "refuta",
+        "sources": [
+          "https://rpp.pe/politica/actualidad/fernando-rospigliosi-murio-el-exministro-del-interior-y-analista-politico-noticia-1382436",
+          "https://www.congreso.gob.pe/pleno/mesa-directiva/"
+        ]
+      },
+      {
+        "claim": "La madrugada de este viernes 10 de octubre",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.timeanddate.com/calendar/?year=2023",
+          "https://www.timeanddate.com/calendar/?year=2024"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 0,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 12878,
+    "created_at": "2025-11-05T09:41:26.697Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (0/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Factores clave:**\n• Las fuentes citadas son poco confiables o no existen\n• La información contradice fuentes establecidas\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [
+        "• Las fuentes citadas son poco confiables o no existen",
+        "• La información contradice fuentes establecidas"
+      ],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762335799005,
+    "source": "Diario correo",
+    "title": "Grave accidente en Huancayo: combi embiste a madre, su hijo y una vendedora",
+    "body": "Alrededor de las 8:00 p. m. del día de ayer, una combi de la empresa San Juan, de placa CTV-250 y conducida por Evelin Suárez (31), atropelló a tres personas en la intersección de la avenida Próceres con el jirón Augusto B. Leguía, en Chilca.\n\nSegún testigos, las víctimas —una vendedora venezolana identificada como Glorimar Nieves (35), la joven madre Deyanira García (21) y su hijo de tres años— se encontraban en la vía cuando fueron embestidos por el vehículo. Serenos y efectivos policiales auxiliaron a los heridos, trasladando a las dos mujeres a una clínica local con diagnóstico de traumatismo múltiple.",
+    "score": 73,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "La noticia proviene de un medio de comunicación conocido y sus detalles específicos (nombres, placa, lugar, hora) son consistentes y verificables a través de otros reportes periodísticos sobre el mismo evento.",
+    "evidence": [
+      {
+        "claim": "Una combi de la empresa San Juan, de placa CTV-250 y conducida por Evelin Suárez, atropelló a tres personas (Glorimar Nieves, Deyanira García y su hijo) en la Av. Próceres con Jr. Augusto B. Leguía, en Chilca, Huancayo.",
+        "assessment": "soporta",
+        "sources": [
+          "https://diariocorreo.pe/edicion/huancayo/huancayo-combi-embiste-a-madre-su-hijo-y-una-vendedora-en-chilca-noticia/",
+          "https://rpp.pe/peru/junin/huancayo-combi-embiste-a-madre-a-su-hijo-y-a-una-vendedora-en-chilca-noticia-1502444"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 98,
+    "ml_score": 56.00000000000001,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 11146,
+    "created_at": "2025-11-05T09:43:19.005Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (98/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
+  },
+  {
+    "id": 1762338386659,
+    "source": "Diario correo",
+    "title": "Jose Jeri nuevo presidente",
+    "body": "Jose Jeri nuevo presidente del Peru",
+    "score": 50,
+    "verdict": "dudosa",
+    "labels": [
+      "fuente_local",
+      "necesita_verificacion",
+      "posible_error_o_fabricacion",
+      "contenido_improbable"
+    ],
+    "rationale": "Aunque 'Diario Correo' es un medio de comunicación peruano reconocido y de larga trayectoria, lo que le da una credibilidad inicial a la fuente, el contenido de la noticia ('Jose Jeri nuevo presidente del Peru') es altamente improbable y carece de toda verificación en otras fuentes relevantes. Actualmente, la presidenta de Perú es Dina Boluarte. Un cambio presidencial de esta magnitud sería la noticia principal en *todos* los medios nacionales e internacionales de forma inmediata, y José Jerí es conocido como congresista, no como presidente. La brevedad extrema del cuerpo de la noticia, idéntica al título, es altamente inusual para un anuncio tan trascendental de un medio profesional y sugiere un posible error editorial, un titular fabricado o contenido sacado de contexto. No hay indicios de que esta información sea una noticia de última hora real corroborada por otras fuentes confiables.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 94 características",
+    "gemini_score": 25,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 11302,
+    "created_at": "2025-11-05T10:26:26.659Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (25/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762338461781,
+    "source": "Diario correo",
+    "title": "Passdih en Huancayo: Cuatro décadas llevando esperanza",
+    "body": "En tiempos donde el miedo y la violencia marcaron al país, en Huancayo nació una esperanza silenciosa. Así surgieron Cáritas Huancayo y la Pastoral Social de Dignidad Humana (PASSDIH), obras del Arzobispado, que hoy celebran su aniversario reafirmando su compromiso con los más pobres.\n\nDesde hace 39 años, PASSDIH acompaña historias de dolor y resistencia. Ha estado junto a las víctimas del terrorismo, ayudándolas en la búsqueda de sus familiares desaparecidos, y junto a las familias desplazadas de Morococha, defendiendo su derecho a vivir con dignidad. Su labor también se extiende a los penales, donde la Pastoral Penitenciaria ofrece apoyo espiritual y emocional a quienes buscan empezar de nuevo.",
+    "score": 78,
+    "verdict": "real",
+    "labels": [
+      "fuente_local",
+      "estructura_creible",
+      "posible_real"
+    ],
+    "rationale": "El contenido se presenta como una noticia real sobre el aniversario y la labor social de Cáritas Huancayo y PASSDIH, organizaciones del Arzobispado. La fuente, 'Diario Correo', es un medio de comunicación peruano reconocido y con ediciones regionales, lo que lo convierte en una fuente creíble para este tipo de noticias locales y de impacto social. La redacción es profesional, informativa y coherente con un estilo periodístico de reportaje o crónica. El contexto histórico mencionado (miedo, violencia, víctimas del terrorismo, desplazados de Morococha) es relevante y veraz para la historia reciente del Perú y la región de Huancayo, lo que añade credibilidad al relato de la labor de PASSDIH. No hay elementos que sugieran que el contenido sea satírico o falso; por el contrario, encaja perfectamente con el tipo de noticias que cubren los diarios locales sobre la actividad de organizaciones sin fines de lucro y de base religiosa.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 94 características",
+    "gemini_score": 95,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10852,
+    "created_at": "2025-11-05T10:27:41.781Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (95/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
   }
 ]
