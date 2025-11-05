@@ -87,69 +87,85 @@
     const resultBox = $("#result");
     const historyBox = $("#history");
 
-    btn.addEventListener("click", async ()=>{
-      const data = {
-        source: $("#source").value.trim(),
-        title: $("#title").value.trim(),
-        body: $("#body").value.trim()
-      };
-      if(!data.title && !data.body) return alert("Ingresa al menos título o cuerpo.");
+ btn.addEventListener("click", async ()=>{
+  const data = {
+    source: $("#source").value.trim(),
+    title: $("#title").value.trim(),
+    body: $("#body").value.trim()
+  };
+  if(!data.title && !data.body) return alert("Ingresa al menos título o cuerpo.");
 
-      btn.disabled = true;
-      btn.textContent = "Analizando...";
+  btn.disabled = true;
+  btn.textContent = "Analizando...";
 
-      try {
-        const res = await fetch(API + "/analyze", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if(!json.ok) throw new Error(json.error || "Error en análisis");
-
-        const { score, labels, rationale, verdict, evidence } = json.result;
-
-        const verdictBadgeColor =
-          verdict === "falsa" ? "#dc2626" :
-          verdict === "dudosa" ? "#d97706" :
-          verdict === "no_verificable" ? "#64748b" : "#16a34a";
-
-        resultBox.style.display = "block";
-        resultBox.innerHTML = `
-          <div class="score">
-            Score: ${score}
-            <span class="verdict-badge" style="background:${verdictBadgeColor}">
-              ${String(verdict || '').toUpperCase() || "—"}
-            </span>
-          </div>
-          <div><strong>Etiquetas:</strong> ${
-            (labels||[]).map(x=>`<span class="pill">${x}</span>`).join(" ") || "—"
-          }</div>
-          <div class="mt-8"><strong>Explicación:</strong> ${rationale || "—"}</div>
-          <div class="mt-8"><strong>Evidencia:</strong>
-            <ul class="evidence-list">
-              ${
-                (evidence||[]).map(ev => `
-                  <li>
-                    <div class="claim"><em>${ev.claim || "—"}</em> — <b>${ev.assessment || "incierto"}</b></div>
-                    <div class="sources">
-                      ${(ev.sources||[]).slice(0,3).map(u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`).join("<br/>") || "—"}
-                    </div>
-                  </li>
-                `).join("") || "<li>—</li>"
-              }
-            </ul>
-          </div>
-        `;
-        await loadHistory();
-      } catch(e) {
-        console.error(e);
-        alert("Error al conectar con la API");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Analizar";
-      }
+  try {
+    const res = await fetch(API + "/analyze", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(data)
     });
+    const json = await res.json();
+    if(!json.ok) throw new Error(json.error || "Error en análisis");
+
+    // ✅ CORREGIDO - Nueva estructura con ML
+    const resultData = json.result;
+    const final = resultData.final || {};
+    const gemini = resultData.gemini || {};
+
+    // Usar los datos finales combinados (ML + Gemini)
+    const score = final.score || gemini.score;
+    const verdict = final.verdict || gemini.verdict;
+    const rationale = final.explanation || gemini.rationale;
+    const labels = gemini.labels || [];
+    const evidence = gemini.evidence || [];
+
+    // Mostrar info del ML en consola
+    if (resultData.ml) {
+      console.log("✅ ML activo - Veredicto:", resultData.ml.ml_verdict, "Score:", resultData.ml.ml_score);
+    }
+
+    const verdictBadgeColor =
+      verdict === "falsa" ? "#dc2626" :
+      verdict === "dudosa" ? "#d97706" :
+      verdict === "no_verificable" ? "#64748b" : "#16a34a";
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+      <div class="score">
+        Score: ${score}
+        <span class="verdict-badge" style="background:${verdictBadgeColor}">
+          ${String(verdict || '').toUpperCase() || "—"}
+        </span>
+      </div>
+      <div><strong>Etiquetas:</strong> ${
+        (labels||[]).map(x=>`<span class="pill">${x}</span>`).join(" ") || "—"
+      }</div>
+      <div class="mt-8"><strong>Explicación:</strong> ${rationale || "—"}</div>
+      <div class="mt-8"><strong>Evidencia:</strong>
+        <ul class="evidence-list">
+          ${
+            (evidence||[]).map(ev => `
+              <li>
+                <div class="claim"><em>${ev.claim || "—"}</em> — <b>${ev.assessment || "incierto"}</b></div>
+                <div class="sources">
+                  ${(ev.sources||[]).slice(0,3).map(u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`).join("<br/>") || "—"}
+                </div>
+              </li>
+            `).join("") || "<li>—</li>"
+          }
+        </ul>
+      </div>
+      ${resultData.ml ? `<div class="mt-8 ml-info"><small>🤖 Análisis mejorado con ML (${resultData.ml.ml_features_used} características)</small></div>` : ''}
+    `;
+    await loadHistory();
+  } catch(e) {
+    console.error(e);
+    alert("Error al conectar con la API");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Analizar";
+  }
+});
 
     // --- 📤 FUNCIÓN NUEVA: subir dataset ---
    function uploadDataset() {

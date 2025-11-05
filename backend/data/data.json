@@ -164,5 +164,229 @@
     "model": "gemini-2.5-flash",
     "latency_ms": 12754,
     "created_at": "2025-11-03T02:43:20.489Z"
+  },
+  {
+    "id": 1762319589194,
+    "source": "Diario correo",
+    "title": "Jose jeri es dibujito",
+    "body": "Jose jeri es dibujito ga",
+    "score": 5,
+    "verdict": "no_noticia",
+    "labels": [
+      "sin_fuente"
+    ],
+    "rationale": "El contenido es incomprensible, carece de valor informativo o periodístico y no presenta ninguna afirmación verificable. Parece una expresión aleatoria sin contexto.",
+    "evidence": [
+      {
+        "claim": "Jose jeri es dibujito ga",
+        "assessment": "incierto",
+        "sources": []
+      }
+    ],
+    "checks": {
+      "fecha_coherente": false,
+      "fuente_identificable": true,
+      "consenso_en_fuentes": false
+    },
+    "model": "gemini-2.5-flash",
+    "latency_ms": 13628,
+    "created_at": "2025-11-05T05:13:09.194Z"
+  },
+  {
+    "id": 1762319670930,
+    "source": "Diario correo",
+    "title": "Junín: recuperan restos óseos de cuatro presuntas víctimas del periodo de violencia",
+    "body": "Mediante una intervención arqueológica forense en el cementerio del anexo de Rimaycancha, en el distrito de Ingenio, provincia de Huancayo, donde fueron hallados restos óseos de cuatro personas que habrían sido ejecutadas extrajudicialmente en 1990.",
+    "score": 90,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "Noticia de un medio reconocido sobre un hallazgo forense plausible en el contexto histórico peruano. Los detalles son específicos y coherentes con eventos pasados en la región.",
+    "evidence": [
+      {
+        "claim": "recuperación de restos óseos de cuatro presuntas víctimas del periodo de violencia de 1990 en Rimaycancha, Ingenio, Huancayo.",
+        "assessment": "soporta",
+        "sources": [
+          "Diario Correo (fuente de la noticia)"
+        ]
+      }
+    ],
+    "checks": {
+      "fecha_coherente": true,
+      "fuente_identificable": true,
+      "consenso_en_fuentes": false
+    },
+    "model": "gemini-2.5-flash",
+    "latency_ms": 9535,
+    "created_at": "2025-11-05T05:14:30.930Z"
+  },
+  {
+    "id": 1762328189475,
+    "source": "Diario correo",
+    "title": "Jose jeri es nuevo presidente",
+    "body": "Jose jeri es nuevo presidente del Perú",
+    "verdict": "dudosa",
+    "score": 42,
+    "confidence": 0.42200000000000004,
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "method": "hybrid_ml_gemini",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10820,
+    "created_at": "2025-11-05T07:36:29.475Z"
+  },
+  {
+    "id": 1762328625992,
+    "source": "Diario correo",
+    "title": "Jose Jeri presidente",
+    "body": "Jose Jeri presidente del Peru",
+    "verdict": "dudosa",
+    "score": 42,
+    "confidence": 0.42200000000000004,
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "method": "hybrid_ml_gemini",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10110,
+    "created_at": "2025-11-05T07:43:45.992Z"
+  },
+  {
+    "id": 1762328920948,
+    "source": "Diario correo",
+    "title": "Ovni aterriza en Huancayo",
+    "body": "Ovni aterriza en Huancayo y aterroriza a la poblacion",
+    "verdict": "dudosa",
+    "score": 42,
+    "confidence": 0.41800000000000004,
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "method": "hybrid_ml_gemini",
+    "gemini_score": 10,
+    "ml_score": 63,
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 11453,
+    "created_at": "2025-11-05T07:48:40.948Z"
+  },
+  {
+    "id": 1762329014072,
+    "source": "Diario correo",
+    "title": "Comisión de Fiscalización solicita información por equipo del Congreso que se utilizó en mitin de Fuerza Popular",
+    "body": "Luego de revelarse que Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó uno de los equipos para cubrir una actividad proselitista de la precandidata presidencial de Fuerza Popular, Keiko Fujimori, las pesquisas en el Parlamento avanzan.\n\nSi bien el Congreso de la República emitió un comunicado para informar de la renuncia del técnico que trabajaba en una oficina que encabeza Fuerza Popular, no se dieron mayores detalles, ni siquiera el nombre del trabajador despedido o el nombre de otras de las personas involucradas.",
+    "verdict": "real",
+    "score": 76,
+    "confidence": 0.758,
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "method": "hybrid_ml_gemini",
+    "gemini_score": 95,
+    "ml_score": 63,
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 17097,
+    "created_at": "2025-11-05T07:50:14.072Z"
+  },
+  {
+    "id": 1762329409437,
+    "source": "Diario correo",
+    "title": "Comisión de Fiscalización solicita información por equipo del Congreso que se utilizó en mitin de Fuerza Popular",
+    "body": "Luego de revelarse que Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó uno de los equipos para cubrir una actividad proselitista de la precandidata presidencial de Fuerza Popular, Keiko Fujimori, las pesquisas en el Parlamento avanzan.\n\nSi bien el Congreso de la República emitió un comunicado para informar de la renuncia del técnico que trabajaba en una oficina que encabeza Fuerza Popular, no se dieron mayores detalles, ni siquiera el nombre del trabajador despedido o el nombre de otras de las personas involucradas.",
+    "score": 74,
+    "verdict": "real",
+    "labels": [
+      "neutral"
+    ],
+    "rationale": "El artículo reporta un incidente ampliamente documentado y cubierto por múltiples medios de comunicación peruanos en 2020, que involucró el uso indebido de recursos del Congreso y una investigación posterior.",
+    "evidence": [
+      {
+        "claim": "Daniel Luza Amesquita, técnico de la Oficina de Participación Ciudadana del Congreso, utilizó equipos del Congreso para cubrir una actividad proselitista de Keiko Fujimori.",
+        "assessment": "soporta",
+        "sources": [
+          "https://rpp.pe/politica/congreso/congreso-tecnico-de-la-oficina-de-participacion-ciudadana-renuncio-tras-ser-detectado-usando-equipos-en-mitin-de-fuerza-popular-noticia-1304535",
+          "https://larepublica.pe/politica/2020/11/26/tecnico-del-congreso-uso-equipos-para-mitin-de-fuerza-popular-y-fue-despedido-lrsd/"
+        ]
+      },
+      {
+        "claim": "La Comisión de Fiscalización del Congreso solicitó información sobre el incidente.",
+        "assessment": "soporta",
+        "sources": [
+          "https://elcomercio.pe/politica/congreso-comision-de-fiscalizacion-solicito-informacion-sobre-el-tecnico-que-uso-equipos-en-mitin-fujimorista-noticia/"
+        ]
+      },
+      {
+        "claim": "El Congreso de la República emitió un comunicado informando la renuncia del técnico, sin mayores detalles.",
+        "assessment": "soporta",
+        "sources": [
+          "https://rpp.pe/politica/congreso/congreso-tecnico-de-la-oficina-de-participacion-ciudadana-renuncio-tras-ser-detectado-usando-equipos-en-mitin-de-fuerza-popular-noticia-1304535"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 90,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 14800,
+    "created_at": "2025-11-05T07:56:49.437Z"
+  },
+  {
+    "id": 1762329466274,
+    "source": "Diario correo",
+    "title": "extraterrestre encontrado vivo en huancayo",
+    "body": "extraterrestre encontrado vivo en huancayo",
+    "score": 40,
+    "verdict": "falsa",
+    "labels": [
+      "clickbait",
+      "sin_fuente",
+      "rumor"
+    ],
+    "rationale": "Afirmación extraordinaria sin ningún detalle o evidencia. Una búsqueda en 'Diario Correo' no muestra esta noticia. Es altamente improbable y carece de sustento.",
+    "evidence": [
+      {
+        "claim": "extraterrestre encontrado vivo en huancayo",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.google.com/search?q=extraterrestre+encontrado+vivo+huancayo+diario+correo"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 63,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 9645,
+    "created_at": "2025-11-05T07:57:46.274Z"
+  },
+  {
+    "id": 1762329505775,
+    "source": "Diario correo",
+    "title": "Jose Jeri es nuevo presidente",
+    "body": "Jose Jeri es nuevo presidentedel Perú",
+    "score": 42,
+    "verdict": "dudosa",
+    "labels": [
+      "contradice_fuentes",
+      "rumor"
+    ],
+    "rationale": "Jose Jeri no es el actual presidente del Perú; Dina Boluarte ocupa dicho cargo. La noticia contradice fuentes oficiales y la realidad política del país.",
+    "evidence": [
+      {
+        "claim": "Jose Jeri es nuevo presidente del Perú",
+        "assessment": "refuta",
+        "sources": [
+          "https://www.presidencia.gob.pe/",
+          "https://rpp.pe/",
+          "https://elcomercio.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis híbrido: Gemini + Modelo ML (94 características)",
+    "gemini_score": 5,
+    "ml_score": 67,
+    "ml_verdict": "real",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10295,
+    "created_at": "2025-11-05T07:58:25.775Z"
   }
 ]

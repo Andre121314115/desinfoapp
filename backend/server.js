@@ -45,7 +45,60 @@ const upload = multer({ dest: path.join(__dirname, "uploads") });
 const AUTH_USER = "admin";
 const AUTH_PASS = "1234";
 
-// --- Función para procesar dataset ---
+// --- NUEVO: URL del Colab ML (cambia si reinicias Colab) ---
+const COLAB_ML_URL = "https://laverne-gentianaceous-unpalatally.ngrok-free.dev";
+
+// --- NUEVA FUNCIÓN: Conectar con Colab ML ---
+async function analyzeWithColabML(newsData, geminiResult) {
+  try {
+    console.log("🔗 Conectando con Colab ML...");
+    
+    const mlRequest = {
+      news_data: {
+        title: newsData.title,
+        body: newsData.body,
+        source: newsData.source
+      },
+      gemini_score: geminiResult.score,
+      gemini_verdict: geminiResult.verdict
+    };
+
+    const response = await fetch(`${COLAB_ML_URL}/analyze-ml`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(mlRequest),
+      timeout: 10000 // 10 segundos timeout
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const mlResult = await response.json();
+    console.log("✅ Colab ML respondió correctamente");
+    return mlResult;
+    
+  } catch (error) {
+    console.error("❌ Error conectando con Colab ML:", error.message);
+    // Fallback: retornar estructura vacía para no afectar flujo principal
+    return {
+      ml_analysis: { 
+        ml_verdict: "error", 
+        ml_score: 50,
+        ml_confidence: 0.5,
+        ml_features_used: 0,
+        ml_model_accuracy: 0
+      },
+      final_verdict: geminiResult.verdict,
+      combined_confidence: geminiResult.score / 100,
+      analysis_method: "gemini_only_fallback"
+    };
+  }
+}
+
+// --- Función para procesar dataset (SIN CAMBIOS) ---
 async function processDataset(records, res, filePath) {
   try {
     await fs.ensureDir(DATA_DIR);
@@ -77,7 +130,7 @@ async function processDataset(records, res, filePath) {
     }
 
     await fs.writeFile(DATA_FILE, JSON.stringify(existingData, null, 2));
-    await fs.remove(filePath); // borra archivo temporal
+    await fs.remove(filePath);
 
     res.json({ ok: true, message: "Dataset cargado correctamente" });
   } catch (error) {
@@ -86,23 +139,21 @@ async function processDataset(records, res, filePath) {
   }
 }
 
-// --- Endpoint para subir dataset ---
-// --- Endpoint para subir dataset ---
+// --- Endpoint para subir dataset (SIN CAMBIOS) ---
 app.post("/upload-dataset", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).send("No se subió ningún archivo.");
 
     const ext = path.extname(req.file.originalname).toLowerCase();
-    const filePath = req.file.path; // ✅ Corrección: no agregar "backend" aquí
+    const filePath = req.file.path;
 
-    // Función para leer CSV o XLSX
     const readDataset = async () => {
       const results = [];
 
       if (ext === ".csv") {
         return new Promise((resolve, reject) => {
           fs.createReadStream(filePath)
-            .pipe(csv()) // ✅ Corrección: era csvParser()
+            .pipe(csv())
             .on("data", (data) => results.push(data))
             .on("end", () => resolve(results))
             .on("error", reject);
@@ -119,32 +170,25 @@ app.post("/upload-dataset", upload.single("file"), async (req, res) => {
 
     const newData = await readDataset();
 
-    // ✅ Detectar si el dataset tiene columna "etiqueta"
     const hasEtiqueta =
       newData.length > 0 &&
       Object.keys(newData[0]).some(
         (k) => k.toLowerCase().trim() === "etiqueta"
       );
 
-    // ✅ Corrección: rutas directas sin "backend"
     const dataPath = path.join(__dirname, "data", "data.json");
     const datasetPath = path.join(__dirname, "data", "dataset.json");
 
     const targetFile = hasEtiqueta ? datasetPath : dataPath;
 
-    // Crear archivo si no existe
     if (!fs.existsSync(targetFile)) {
       fs.writeFileSync(targetFile, "[]", "utf-8");
     }
 
-    // Leer archivo actual
     const existing = JSON.parse(fs.readFileSync(targetFile, "utf-8"));
-
-    // Agregar nuevos registros
     const updated = [...existing, ...newData];
     fs.writeFileSync(targetFile, JSON.stringify(updated, null, 2), "utf-8");
 
-    // Eliminar el archivo temporal
     fs.unlinkSync(filePath);
 
     res.json({
@@ -159,7 +203,8 @@ app.post("/upload-dataset", upload.single("file"), async (req, res) => {
     res.status(500).send("Error al procesar el dataset");
   }
 });
-// --- Funciones de utilidad existentes ---
+
+// --- Funciones de utilidad existentes (SIN CAMBIOS) ---
 async function readAll() {
   try {
     const exists = await fs.pathExists(DATA_FILE);
@@ -181,10 +226,38 @@ async function appendRow(row) {
 }
 
 // --- Rutas básicas ---
-app.get("/", (_req, res) => res.json({ ok: true, msg: "API Desinfo viva" }));
-app.get("/health", (_req, res) => res.json({ ok: true, uptime: process.uptime() }));
+app.get("/", (_req, res) => res.json({ 
+  ok: true, 
+  msg: "API Desinfo viva + ML Integration",
+  features: ["gemini", "colab_ml", "datasets", "history", "export"]
+}));
 
-// --- Análisis de noticias ---
+app.get("/health", (_req, res) => res.json({ 
+  ok: true, 
+  uptime: process.uptime(),
+  ml_integration: true 
+}));
+
+// --- NUEVO: Endpoint para verificar conexión Colab ---
+app.get("/ml-status", async (_req, res) => {
+  try {
+    const response = await fetch(`${COLAB_ML_URL}/health`, { timeout: 5000 });
+    const status = await response.json();
+    res.json({ 
+      ok: true, 
+      colab_connected: true,
+      colab_status: status 
+    });
+  } catch (error) {
+    res.json({ 
+      ok: true, 
+      colab_connected: false,
+      error: error.message 
+    });
+  }
+});
+
+// --- Análisis de noticias (MEJORADO con integración ML) ---
 app.post("/analyze", async (req, res) => {
   try {
     const { title = "", body = "", source = "" } = req.body || {};
@@ -192,14 +265,17 @@ app.post("/analyze", async (req, res) => {
       return res.status(400).json({ ok: false, error: "Falta title o body" });
     }
 
-// --- Cargar dataset para dar contexto a Gemini ---
-const allData = await readAll();
-const ejemplos = allData
-  .slice(-10) // usa los últimos 10 ejemplos
-  .map((x, i) => `${i + 1}. (${x.etiqueta || "sin_etiqueta"}) ${x.titulo}`)
-  .join("\n");
+    console.log("📊 Iniciando análisis...");
+    const analysisStart = Date.now();
 
-const prompt = `
+    // --- Análisis con Gemini (EXISTENTE - SIN CAMBIOS) ---
+    const allData = await readAll();
+    const ejemplos = allData
+      .slice(-10)
+      .map((x, i) => `${i + 1}. (${x.etiqueta || "sin_etiqueta"}) ${x.titulo}`)
+      .join("\n");
+
+    const prompt = `
 Eres un verificador profesional de noticias locales.
 Tienes a continuación algunos ejemplos de noticias previamente clasificadas por analistas humanos:
 
@@ -225,13 +301,12 @@ Texto a verificar:
 - Cuerpo: ${body}
 `.trim();
 
-
-    const started = Date.now();
+    const geminiStart = Date.now();
     const resp = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
-    const latency_ms = Date.now() - started;
+    const geminiLatency = Date.now() - geminiStart;
 
     const text = (resp.text || "").trim();
     let parsed = {};
@@ -244,7 +319,7 @@ Texto a verificar:
       parsed = JSON.parse(onlyJson);
     }
 
-    const result = {
+    const geminiResult = {
       score: typeof parsed.score === "number" ? parsed.score : 50,
       verdict: parsed.verdict || "dudosa",
       labels: Array.isArray(parsed.labels) ? parsed.labels : [],
@@ -257,26 +332,86 @@ Texto a verificar:
       },
     };
 
-    const row = {
-      id: Date.now(),
-      source,
-      title,
-      body,
-      ...result,
-      model: "gemini-2.5-flash",
-      latency_ms,
-      created_at: new Date().toISOString(),
-    };
-    await appendRow(row);
+    console.log(`✅ Gemini completado en ${geminiLatency}ms`);
 
-    res.json({ ok: true, result, saved: { id: row.id, latency_ms } });
+    // --- NUEVO: Análisis con Colab ML ---
+    let mlAnalysis = null;
+    try {
+      mlAnalysis = await analyzeWithColabML(
+        { title, body, source },
+        geminiResult
+      );
+      console.log("✅ Colab ML integrado correctamente");
+    } catch (mlError) {
+      console.log("⚠️ Colab ML no disponible, usando solo Gemini");
+      mlAnalysis = {
+        ml_analysis: { ml_verdict: "no_disponible", ml_score: geminiResult.score },
+        final_verdict: geminiResult.verdict,
+        combined_confidence: geminiResult.score / 100
+      };
+    }
+
+    // --- Combinar resultados ---
+    const combinedResult = {
+      gemini: {
+        ...geminiResult,
+        latency_ms: geminiLatency
+      },
+      ml: mlAnalysis.ml_analysis,
+      final: {
+        verdict: mlAnalysis.final_verdict || geminiResult.verdict,
+        score: Math.round(mlAnalysis.combined_confidence * 100) || geminiResult.score,
+        confidence: mlAnalysis.combined_confidence || (geminiResult.score / 100),
+        explanation: `Análisis híbrido: Gemini + Modelo ML (${mlAnalysis.ml_analysis?.ml_features_used || 0} características)`,
+        method: mlAnalysis.analysis_method || "gemini_standalone"
+      }
+    };
+
+    // --- Guardar en historial ---
+// --- Guardar en historial (VERSIÓN CORREGIDA) ---
+const row = {
+  id: Date.now(),
+  source,
+  title,
+  body,
+  // ✅ DATOS PRINCIPALES para el frontend
+  score: combinedResult.final.score,
+  verdict: combinedResult.final.verdict,
+  // ✅ GUARDAR EXPLÍCITAMENTE labels Y rationale DE GEMINI
+  labels: geminiResult.labels || [],
+  rationale: geminiResult.rationale || "Sin explicación",
+  evidence: geminiResult.evidence || [],
+  // Datos adicionales para análisis interno
+  explanation: combinedResult.final.explanation,
+  gemini_score: geminiResult.score,
+  ml_score: mlAnalysis.ml_analysis?.ml_score || null,
+  ml_verdict: mlAnalysis.ml_analysis?.ml_verdict || null,
+  model: "gemini-2.5-flash + random-forest-ml",
+  latency_ms: Date.now() - analysisStart,
+  created_at: new Date().toISOString(),
+};
+
+await appendRow(row);
+
+    console.log(`🎯 Análisis completado en ${Date.now() - analysisStart}ms`);
+
+    res.json({ 
+      ok: true, 
+      result: combinedResult,
+      saved: { 
+        id: row.id, 
+        total_latency: Date.now() - analysisStart,
+        gemini_latency: geminiLatency
+      } 
+    });
+
   } catch (e) {
     console.error("[/analyze] Error:", e);
     res.status(500).json({ ok: false, error: "Fallo en análisis" });
   }
 });
 
-// --- Historial ---
+// --- Historial (SIN CAMBIOS) ---
 app.get("/history", async (req, res) => {
   try {
     const { q = "", limit = "100" } = req.query;
@@ -301,7 +436,7 @@ app.get("/history", async (req, res) => {
   }
 });
 
-// --- Export CSV ---
+// --- Export CSV (SIN CAMBIOS) ---
 app.get("/export/csv", async (_req, res) => {
   try {
     const all = await readAll();
@@ -365,6 +500,13 @@ process.on("unhandledRejection", (reason) => {
 try {
   app.listen(PORT, () => {
     console.log("✅ API en puerto", PORT);
+    console.log("🤖 Integración ML activa:", COLAB_ML_URL);
+    console.log("📊 Endpoints disponibles:");
+    console.log("   POST /analyze          - Análisis con Gemini + ML");
+    console.log("   GET  /ml-status        - Estado conexión Colab");
+    console.log("   POST /upload-dataset   - Subir datasets");
+    console.log("   GET  /history          - Historial de análisis");
+    console.log("   GET  /export/csv       - Exportar datos");
   });
 } catch (e) {
   console.error("❌ Error al iniciar app.listen:", e);
