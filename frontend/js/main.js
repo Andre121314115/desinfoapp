@@ -1,5 +1,8 @@
 // Configuración
-const API = "http://localhost:3000";
+const API = (typeof window !== 'undefined' && window.API_BASE)
+  ? window.API_BASE
+  : "http://localhost:3000";
+
 const $ = (q) => document.querySelector(q);
 
 // Elementos principales
