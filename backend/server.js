@@ -319,35 +319,49 @@ app.post("/analyze", async (req, res) => {
       .join("\n");
 
 const prompt = `
-Eres un verificador de noticias profesional con conocimiento en medios peruanos.
+Eres un verificador profesional de noticias con acceso a búsqueda web en tiempo real. Analiza cualquier tipo de noticia (política, salud, deportes, farándula, local, internacional) siguiendo este protocolo:
 
-ANÁLISIS EN 2 ETAPAS:
+PROTOCOLO DE VERIFICACIÓN:
+1. **BÚSQUEDA WEB INMEDATA**: Buscar información actualizada sobre el tema
+2. **CONTEXTO MULTIDISCIPLINAR**: Considerar el tipo de noticia (política, salud, deportes, etc.)
+3. **FUENTES CONFIABLES**: Contrastar con medios verificados y páginas oficiales
+4. **ANÁLISIS NEUTRAL**: Sin prejuicios, basado solo en evidencia encontrada
 
-1. **ANÁLISIS INICIAL** (sin prejuicios):
-   - ¿El contenido parece una noticia real o satírica?
-   - ¿La fuente es reconocida?
-   - ¿La redacción es profesional?
+CRITERIOS POR CATEGORÍA:
+- **POLÍTICA**: Verificar en congreso.gob.pe, elperuano.pe, medios políticos
+- **SALUD**: Buscar en minsa.gob.pe, OMS, fuentes médicas
+- **DEPORTES**: Verificar en federaciones oficiales, medios deportivos
+- **FARÁNDULA**: Contrastar en redes oficiales, medios de espectáculos
+- **LOCAL**: Considerar medios regionales y fuentes locales
 
-2. **CONTEXTO PERUANO**:
-   - Considera cambios políticos recientes o noticias locales.
-   - Medios regionales pueden tener información antes que los nacionales.
+RESPONDER EXCLUSIVAMENTE CON JSON VÁLIDO:
 
-IMPORTANTE: No asumas que toda información nueva es falsa. Considera la posibilidad de noticias de última hora.
-
-RESPUESTA EN JSON (breve y concisa):
 {
   "score": 0-100,
-  "verdict": "real" | "falsa" | "no_noticia" | "dudosa",
-  "rationale": "Explicación muy breve (máx. 2 líneas) del veredicto",
-  "labels": ["ultima_hora"|"fuente_local"|"necesita_verificacion"|"posible_real"|"estructura_creible"],
-  "evidence": [],
-  "checks": {"fecha_coherente":true, "fuente_identificable":true, "consenso_en_fuentes":null}
+  "verdict": "creible" | "dudosa" | "falsa" | "no_verificable",
+  "labels": ["clickbait"|"sin_fuente"|"contradice_fuentes"|"sesgada"|"descontextualizada"|"rumor"|"satira"|"neutral"|"verificado"|"ultima_hora"],
+  "rationale": "Explicación breve basada en evidencia encontrada",
+  "evidence": [
+    {
+      "claim": "afirmación específica verificada",
+      "assessment": "soporta|refuta|incierto",
+      "sources": ["https://fuente1.com", "https://fuente2.com"]
+    }
+  ],
+  "checks": {
+    "fecha_coherente": true|false,
+    "fuente_identificable": true|false,
+    "consenso_en_fuentes": true|false,
+    "contexto_apropiado": true|false
+  }
 }
 
-Noticia a analizar:
-- Fuente: ${source}
+TEXTO A VERIFICAR:
 - Título: ${title}
+- Fuente: ${source}
 - Cuerpo: ${body}
+
+EJECUTAR BÚSQUEDA WEB Y RESPONDER SOLO CON JSON.
 `.trim();
 
 
