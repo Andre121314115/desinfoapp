@@ -38,14 +38,14 @@
           <span class="nav-text">Historial</span>
         </a>
         <a href="#" class="nav-item" data-section="datasets">
-
+          
           <span class="nav-text">Datasets</span>
         </a>
         <!-- ✅ NUEVA SECCIÓN: Calibración -->
         <a href="#" class="nav-item" data-section="calibration">
 
           <span class="nav-text">Calibración</span>
-          
+
         </a>
         <div class="nav-divider"></div>
         <a href="#" class="nav-item" data-section="settings">
@@ -84,7 +84,7 @@
               <textarea id="body" class="form-textarea" placeholder="Pega aquí el contenido de la noticia" rows="10"></textarea>
             </div>
             
-            <button id="btnAnalyze" class="submit-btn">🔍 Analizar Noticia</button>
+            <button id="btnAnalyze" class="submit-btn">Analizar Noticia</button>
           </div>
 
           <div id="result" class="result" style="display:none">
@@ -94,7 +94,7 @@
 
         <!-- MÉTRICAS -->
         <section class="metrics-wrap content-card" aria-label="Métricas de análisis">
-          <h2>📈 Métricas del Sistema</h2>
+          <h2>Métricas del Sistema</h2>
           <div class="metrics-grid">
             <article class="metric-card">
               <div class="metric-kpi" id="kpiTotal">0</div>
@@ -144,7 +144,7 @@
             <input type="file" id="datasetFile" accept=".csv, .xlsx" class="form-input" />
           </div>
           
-          <button id="btnUploadDataset" class="submit-btn">📤 Cargar Dataset</button>
+          <button id="btnUploadDataset" class="submit-btn">Cargar Dataset</button>
           <p id="uploadMessage" class="muted"></p>
         </div>
       </section>
@@ -153,7 +153,7 @@
       <section id="calibration-section" class="content-section">
         <div class="content-card">
           <div class="card-header">
-            <h1 class="card-title">🔧 Calibración del Sistema</h1>
+            <h1 class="card-title">Calibración del Sistema</h1>
             <p class="card-subtitle">
               HU07: Recalibra los puntajes de veracidad basándose en coincidencias con el dataset local.
               Mejora la precisión del sistema automáticamente.
@@ -180,8 +180,8 @@
 
           <!-- Acciones de calibración -->
           <div class="calibration-actions">
-            <button id="btnRunCalibration" class="submit-btn">🔄 Ejecutar Calibración</button>
-            <button id="btnViewCalibrationLog" class="btn-secondary">📋 Ver Registros</button>
+            <button id="btnRunCalibration" class="submit-btn">Ejecutar Calibración</button>
+            <button id="btnViewCalibrationLog" class="btn-secondary">Ver Registros</button>
           </div>
 
           <!-- Resultados de calibración -->
@@ -207,6 +207,8 @@
     </main>
   </div>
 
+  <!-- 👇 Cargar config antes que main -->
+  <script src="js/config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

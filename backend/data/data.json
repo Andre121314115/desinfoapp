@@ -1193,5 +1193,90 @@
       "recommendation": "✅ Puede compartirse con confianza",
       "confidence": "alta"
     }
+  },
+  {
+    "id": 1762407380789,
+    "source": "",
+    "title": "Jose jeri nuevo presidente",
+    "body": "",
+    "score": 32,
+    "verdict": "no_noticia",
+    "labels": [
+      "fuente_no_identificable",
+      "contenido_insuficiente",
+      "necesita_verificacion"
+    ],
+    "rationale": "No se proporciona fuente ni cuerpo de la noticia. La afirmación es de extrema gravedad y carece de todo contexto o respaldo.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 0 características",
+    "gemini_score": 5,
+    "ml_score": 50,
+    "ml_verdict": "error",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10025,
+    "created_at": "2025-11-06T05:36:20.789Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (5/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762408391982,
+    "source": "Diario correo",
+    "title": "Jose jeri nuevo presidente",
+    "body": "Jose jeri nuevo presidente",
+    "score": 44,
+    "verdict": "dudosa",
+    "labels": [
+      "necesita_verificacion",
+      "posible_real"
+    ],
+    "rationale": "Contenido extremadamente breve y sin contexto. Aunque la fuente es real y el personaje conocido, la redacción no es profesional y es imposible verificar la noticia tal como está presentada.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 0 características",
+    "gemini_score": 35,
+    "ml_score": 50,
+    "ml_verdict": "error",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 11698,
+    "created_at": "2025-11-06T05:53:11.982Z",
+    "explanations": {
+      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
+      "detailed": "**Puntaje medio (35/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
+  },
+  {
+    "id": 1762408483926,
+    "source": "Diario correo",
+    "title": "Jose jeri nuevo presidente",
+    "body": "Jose jeri nuevo presidente",
+    "score": 34,
+    "verdict": "dudosa",
+    "labels": [
+      "necesita_verificacion",
+      "fuente_local"
+    ],
+    "rationale": "Contenido extremadamente breve y sin contexto. Redacción no profesional, no especifica 'de qué' es presidente. Si se refiere a la presidencia de Perú, es falso.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 0 características",
+    "gemini_score": 10,
+    "ml_score": 50,
+    "ml_verdict": "error",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 12081,
+    "created_at": "2025-11-06T05:54:43.926Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (10/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Recomendación:** ❌ No se recomienda compartir",
+      "factors": [],
+      "recommendation": "❌ No se recomienda compartir",
+      "confidence": "baja"
+    }
   }
 ]
