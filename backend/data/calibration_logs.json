@@ -730,5 +730,177 @@
         "accuracy": 95
       }
     ]
+  },
+  {
+    "timestamp": "2025-11-06T04:28:17.787Z",
+    "total_analyses": 41,
+    "calibrated_analyses": 11,
+    "calibration_rate": 26.83,
+    "average_accuracy": 93.84,
+    "results": [
+      {
+        "analysis_id": 1762129934268,
+        "original_score": 5,
+        "calibrated_score": 23,
+        "matches_found": 4,
+        "accuracy": 73
+      },
+      {
+        "analysis_id": 1762328189475,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762329505775,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762331655935,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334431083,
+        "original_score": 81,
+        "calibrated_score": 82.6,
+        "matches_found": 1,
+        "accuracy": 98
+      },
+      {
+        "analysis_id": 1762334767218,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334819204,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 6,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334838542,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 6,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762335201237,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762335485114,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762338386659,
+        "original_score": 50,
+        "calibrated_score": 50,
+        "matches_found": 4,
+        "accuracy": 100
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-11-06T04:45:00.182Z",
+    "total_analyses": 42,
+    "calibrated_analyses": 11,
+    "calibration_rate": 26.19,
+    "average_accuracy": 93.84,
+    "results": [
+      {
+        "analysis_id": 1762129934268,
+        "original_score": 5,
+        "calibrated_score": 23,
+        "matches_found": 4,
+        "accuracy": 73
+      },
+      {
+        "analysis_id": 1762328189475,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762329505775,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762331655935,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334431083,
+        "original_score": 81,
+        "calibrated_score": 82.6,
+        "matches_found": 1,
+        "accuracy": 98
+      },
+      {
+        "analysis_id": 1762334767218,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334819204,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 6,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762334838542,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 6,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762335201237,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762335485114,
+        "original_score": 42,
+        "calibrated_score": 45.2,
+        "matches_found": 4,
+        "accuracy": 95
+      },
+      {
+        "analysis_id": 1762338386659,
+        "original_score": 50,
+        "calibrated_score": 50,
+        "matches_found": 4,
+        "accuracy": 100
+      }
+    ]
   }
 ]

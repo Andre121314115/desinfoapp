@@ -1133,5 +1133,65 @@
       "recommendation": "✅ Puede compartirse con confianza",
       "confidence": "alta"
     }
+  },
+  {
+    "id": 1762402684753,
+    "source": "Diario Correo",
+    "title": "Chongos Bajo, el pueblo donde los muertos protegen a los vivos",
+    "body": "Calaveras fueron llevadas por abuelas que les colocan chullos, gorras. Además de frutas, coca, cerveza y monedas. Como todos los años en el distrito de Chongos Bajo, Chupaca, ayer (3 de noviembre) las familias se congregaron en el cementerio, sobretodo las abuelas, llevaron sus cráneos a los que arroparon con chullos, gorras y sombreros de lana.\n\nLes colocaron sus hojas de coca, monedas, frutas y hasta cigarros, como parte de su ofrenda. Todo esto a la espera de la misa que brindaría el sacerdote.",
+    "score": 68,
+    "verdict": "real",
+    "labels": [
+      "fuente_confiable",
+      "estructura_creible",
+      "noticia_cultural"
+    ],
+    "rationale": "Reportaje cultural sobre una tradición andina conocida, publicado por un medio reconocido en fechas coherentes con la festividad.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 0 características",
+    "gemini_score": 95,
+    "ml_score": 50,
+    "ml_verdict": "error",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 10124,
+    "created_at": "2025-11-06T04:18:04.753Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (95/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Factores clave:**\n• Las fuentes citadas son poco confiables o no existen\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [
+        "• Las fuentes citadas son poco confiables o no existen"
+      ],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
+  },
+  {
+    "id": 1762403489601,
+    "source": "Diario correo",
+    "title": "Docentes de la UNCP inician huelga indefinida y toman campus universitario",
+    "body": "Los docentes de la Universidad Nacional del Centro del Perú (UNCP) iniciaron una huelga nacional indefinida y tomaron el campus universitario en Huancayo, exigiendo mayor presupuesto para las universidades públicas y el cumplimiento de la ley de homologación salarial.",
+    "score": 68,
+    "verdict": "real",
+    "labels": [
+      "ultima_hora",
+      "fuente_local",
+      "estructura_creible"
+    ],
+    "rationale": "Huelgas universitarias y demandas salariales son recurrentes en Perú. Diario Correo es una fuente nacional con fuerte presencia regional, lo que le da credibilidad local.",
+    "evidence": [],
+    "explanation": "Análisis mejorado: Gemini (40%) + ML (60%) con 0 características",
+    "gemini_score": 95,
+    "ml_score": 50,
+    "ml_verdict": "error",
+    "model": "gemini-2.5-flash + random-forest-ml",
+    "latency_ms": 9659,
+    "created_at": "2025-11-06T04:31:29.601Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (95/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "alta"
+    }
   }
 ]

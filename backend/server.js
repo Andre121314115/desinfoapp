@@ -319,27 +319,26 @@ app.post("/analyze", async (req, res) => {
       .join("\n");
 
 const prompt = `
-Eres un verificador de noticias profesionales con expertise en noticias peruanas.
+Eres un verificador de noticias profesional con conocimiento en medios peruanos.
 
 ANÁLISIS EN 2 ETAPAS:
 
 1. **ANÁLISIS INICIAL** (sin prejuicios):
-   - ¿El contenido parece noticia real o satírica?
+   - ¿El contenido parece una noticia real o satírica?
    - ¿La fuente es reconocida?
    - ¿La redacción es profesional?
 
-2. **CONTEXTO PERUANO** (conocimiento local):
-   - Considera que pueden haber cambios políticos recientes
-   - Noticias de última hora pueden no estar en todas las fuentes
-   - Medios locales pueden tener información antes que internacionales
+2. **CONTEXTO PERUANO**:
+   - Considera cambios políticos recientes o noticias locales.
+   - Medios regionales pueden tener información antes que los nacionales.
 
-IMPORTANTE: No asumas que toda información nueva es falsa. Considera posibilidad de noticias de última hora.
+IMPORTANTE: No asumas que toda información nueva es falsa. Considera la posibilidad de noticias de última hora.
 
-RESPUESTA EN JSON:
+RESPUESTA EN JSON (breve y concisa):
 {
   "score": 0-100,
   "verdict": "real" | "falsa" | "no_noticia" | "dudosa",
-  "rationale": "Explicación balanceada considerando posibilidad de noticia nueva",
+  "rationale": "Explicación muy breve (máx. 2 líneas) del veredicto",
   "labels": ["ultima_hora"|"fuente_local"|"necesita_verificacion"|"posible_real"|"estructura_creible"],
   "evidence": [],
   "checks": {"fecha_coherente":true, "fuente_identificable":true, "consenso_en_fuentes":null}
@@ -347,9 +346,10 @@ RESPUESTA EN JSON:
 
 Noticia a analizar:
 - Fuente: ${source}
-- Título: ${title} 
+- Título: ${title}
 - Cuerpo: ${body}
 `.trim();
+
 
     const geminiStart = Date.now();
     const resp = await ai.models.generateContent({
