@@ -45,7 +45,7 @@ const upload = multer({ dest: path.join(__dirname, "uploads") });
 const AUTH_USER = "admin";
 const AUTH_PASS = "1234";
 
-// --- NUEVO: URL del Colab ML (cambia si reinicias Colab) ---
+// --- NUEVO: URL del Colab ML ---
 const COLAB_ML_URL = "https://laverne-gentianaceous-unpalatally.ngrok-free.dev";
 
 // --- NUEVA FUNCIÓN: Conectar con Colab ML ---
