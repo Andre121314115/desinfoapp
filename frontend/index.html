@@ -12,7 +12,7 @@
   <header class="navbar">
     <div class="navbar-container">
       <div class="navbar-brand">
-        <img src="assets/images/logo.png" alt="Desinfoia Logo" class="logo">
+        <img src="assets/images/logo.png" alt="DesinfoIA Logo" class="logo">
         <span class="brand-text">Detector de Desinformación</span>
       </div>
       
@@ -38,18 +38,14 @@
           <span class="nav-text">Historial</span>
         </a>
         <a href="#" class="nav-item" data-section="datasets">
-          
           <span class="nav-text">Datasets</span>
         </a>
-        <!-- ✅ NUEVA SECCIÓN: Calibración -->
+        <!-- ✅ SECCIÓN: Calibración -->
         <a href="#" class="nav-item" data-section="calibration">
-
           <span class="nav-text">Calibración</span>
-
         </a>
         <div class="nav-divider"></div>
         <a href="#" class="nav-item" data-section="settings">
-
           <span class="nav-text">Configuración</span>
         </a>
       </nav>
@@ -63,11 +59,23 @@
           <div class="card-header">
             <h1 class="card-title">Enviar Noticia para Análisis</h1>
             <p class="card-subtitle">
-              Ingresa un titular y texto de una noticia. El sistema analizará su nivel de veracidad
-              utilizando inteligencia artificial (Gemini 2.5 Flash + ML) y mostrará el puntaje de riesgo.
+              Ingresa el titular, la fuente y el cuerpo de una noticia. El sistema combinará 
+              <strong>Gemini 2.5 Flash con búsqueda web</strong> y un 
+              <strong>modelo local entrenado con noticias peruanas</strong> para estimar su nivel de confiabilidad
+              y mostrar un <strong>puntaje de riesgo</strong> junto con una explicación clara.
             </p>
           </div>
           
+          <!-- Estado del sistema (Gemini + ML local) -->
+          <div class="system-status">
+            <span id="statusGemini" class="status-pill status-ok">
+              🔎 Verificador en línea (Gemini)
+            </span>
+            <span id="statusML" class="status-pill status-ok">
+              🤖 Modelo local de apoyo activo
+            </span>
+          </div>
+
           <div class="news-form">
             <div class="form-group">
               <label for="source" class="form-label">Fuente / Medio</label>
@@ -76,7 +84,7 @@
             
             <div class="form-group">
               <label for="title" class="form-label">Título</label>
-              <input type="text" id="title" class="form-input" placeholder="Ej: El sol saldrá por el oeste mañana">
+              <input type="text" id="title" class="form-input" placeholder="Ej: Gobierno anuncia nuevo programa social">
             </div>
             
             <div class="form-group">
@@ -87,14 +95,22 @@
             <button id="btnAnalyze" class="submit-btn">Analizar Noticia</button>
           </div>
 
+          <!-- Resultado combinado Gemini + ML -->
           <div id="result" class="result" style="display:none">
-            <!-- Resultado se llena dinámicamente con JavaScript -->
+            <!-- Se llena dinámicamente con JavaScript:
+                 - veredicto final (Confiable / Dudosa / Falsa / No verificable)
+                 - score combinado
+                 - explicación simple + detallada
+                 - resumen de Gemini y del modelo local -->
           </div>
         </div>
 
         <!-- MÉTRICAS -->
         <section class="metrics-wrap content-card" aria-label="Métricas de análisis">
           <h2>Métricas del Sistema</h2>
+          <p class="muted">
+            Vista general de cómo se está comportando el detector de desinformación con las noticias analizadas recientemente.
+          </p>
           <div class="metrics-grid">
             <article class="metric-card">
               <div class="metric-kpi" id="kpiTotal">0</div>
@@ -117,7 +133,9 @@
               <div class="metric-label">Veredictos (C/D/F/NV)</div>
             </article>
           </div>
-          <div class="metrics-note muted">* C: creíble, D: dudosa, F: falsa, NV: no verificable</div>
+          <div class="metrics-note muted">
+            * C: creíble / confiable, D: dudosa, F: falsa, NV: no verificable o requiere más evidencia
+          </div>
         </section>
       </section>
 
@@ -126,6 +144,9 @@
         <div class="content-card">
           <div class="top-actions">
             <h2>Historial de Análisis</h2>
+            <p class="muted">
+              Aquí verás las últimas noticias analizadas, su score, veredicto y la explicación generada.
+            </p>
           </div>
           <div id="history" class="history">
             <p class="muted">Aún no hay análisis registrados.</p>
@@ -137,7 +158,11 @@
       <section id="datasets-section" class="content-section">
         <div class="content-card upload-section">
           <h2>Subir Dataset</h2>
-          <p class="card-subtitle">Carga archivos CSV o Excel con noticias para entrenar y calibrar el sistema.</p>
+          <p class="card-subtitle">
+            Carga archivos CSV o Excel con noticias etiquetadas. 
+            Estos datos se utilizan para <strong>entrenar y mejorar el modelo local</strong> 
+            y para alimentar los procesos de calibración automática.
+          </p>
           
           <div class="form-group">
             <label for="datasetFile" class="form-label">Seleccionar archivo</label>
@@ -149,14 +174,15 @@
         </div>
       </section>
 
-      <!-- ✅ NUEVA SECCIÓN: CALIBRACIÓN HU07 -->
+      <!-- SECCIÓN: CALIBRACIÓN HU07 -->
       <section id="calibration-section" class="content-section">
         <div class="content-card">
           <div class="card-header">
             <h1 class="card-title">Calibración del Sistema</h1>
             <p class="card-subtitle">
-              HU07: Recalibra los puntajes de veracidad basándose en coincidencias con el dataset local.
-              Mejora la precisión del sistema automáticamente.
+              <strong>HU07:</strong> Recalibra los puntajes de veracidad comparando los análisis recientes
+              con el <strong>dataset local verificado</strong>. Esto ayuda a que el sistema sea más estable 
+              y confiable con el tiempo, sin depender solo de un modelo.
             </p>
           </div>
 
@@ -201,7 +227,11 @@
       <section id="settings-section" class="content-section">
         <div class="content-card">
           <h2>Configuración</h2>
-          <p class="muted">Panel de configuración del sistema en desarrollo...</p>
+          <p class="muted">
+            Panel de configuración del sistema (en desarrollo). 
+            Aquí podrás ajustar pesos entre Gemini y el modelo local, 
+            umbrales de riesgo y preferencias de visualización para los veredictos.
+          </p>
         </div>
       </section>
     </main>

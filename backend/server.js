@@ -2,13 +2,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";               // 👈 ahora usamos Groq
 import fs from "fs-extra";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import multer from "multer";
 import csv from "csv-parser";
 import xlsx from "xlsx";
+import { spawn } from "node:child_process";
 
 console.log("🔎 Iniciando servidor...");
 
@@ -26,18 +27,22 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
 
-// --- Gemini ---
-let ai;
+// --- Groq (LLaMA 3) como verificador externo ---
+let groqClient;
 try {
-  ai = new GoogleGenAI({});
-  if (!process.env.GOOGLE_API_KEY) {
-    console.warn("⚠️ GOOGLE_API_KEY no está en .env (el SDK puede fallar luego).");
+  const groqKey = process.env.GROQ_API_KEY;
+
+  if (!groqKey) {
+    console.warn(
+      "⚠️ GROQ_API_KEY no está definida en .env. El sistema usará solo el modelo local de ML cuando falle el LLM externo."
+    );
   } else {
-    console.log("🔎 GOOGLE_API_KEY detectada.");
+    groqClient = new Groq({ apiKey: groqKey });
+    console.log("🔎 Cliente Groq inicializado (LLaMA 3).");
   }
 } catch (e) {
-  console.error("❌ Error creando cliente GoogleGenAI:", e);
-  process.exit(1);
+  console.error("❌ Error creando cliente Groq:", e);
+  // No matamos el servidor: dejamos groqClient = undefined y luego hacemos fallback en /analyze
 }
 
 // --- Configuración para subir datasets ---
@@ -45,60 +50,183 @@ const upload = multer({ dest: path.join(__dirname, "uploads") });
 const AUTH_USER = "admin";
 const AUTH_PASS = "1234";
 
-// --- NUEVO: URL del Colab ML ---
-const COLAB_ML_URL = "https://laverne-gentianaceous-unpalatally.ngrok-free.dev";
+// ======================================================
+// 🔧 FUNCIONES DE VEREDICTO Y COMBINACIÓN LLM + ML
+// ======================================================
+function normalizeVerdict(raw) {
+  if (!raw) return "desconocido";
+  const v = String(raw).trim().toLowerCase();
 
-// --- NUEVA FUNCIÓN: Conectar con Colab ML ---
-async function analyzeWithColabML(newsData, geminiResult) {
-  try {
-    console.log("🔗 Conectando con Colab ML...");
-    
-    const mlRequest = {
+  if (["verdadera", "real", "confiable", "true"].includes(v)) return "verdadera";
+  if (["falsa", "engañosa", "fake", "false"].includes(v)) return "falsa";
+  if (["dudosa", "incierta", "incompleta", "no_concluyente"].includes(v))
+    return "dudosa";
+
+  return "desconocido";
+}
+
+function combineGeminiAndML(gemini, ml) {
+  // 👆 El nombre de la función se queda por compatibilidad,
+  // pero ahora "gemini" = salida del LLM Groq.
+  const geminiVerdict = normalizeVerdict(gemini.verdict);
+  const geminiScore = Number(gemini.score ?? 50); // 0-100
+
+  const mlVerdict = normalizeVerdict(ml.verdict);
+  const mlConf = Number(ml.confidence ?? 0.5); // 0-1
+  const mlScore =
+    typeof ml.score === "number" ? ml.score : Math.round(mlConf * 100);
+
+  const HIGH_CONF = 0.75;
+  const MEDIUM_CONF = 0.6;
+
+  let finalVerdict = "requiere_verificacion";
+  let finalScore = 50;
+  const flags = [];
+
+  // 1) LLM "dudosa" + ML "falsa" con alta confianza
+  if (geminiVerdict === "dudosa" && mlVerdict === "falsa" && mlConf >= HIGH_CONF) {
+    finalVerdict = "falsa";
+    finalScore = Math.round(mlScore * 0.9 + geminiScore * 0.1);
+    flags.push("llm_dudosa_ml_falsa_alta_confianza");
+  }
+
+  // 2) Coincidencia fuerte: ambos verdadera
+  else if (geminiVerdict === "verdadera" && mlVerdict === "verdadera") {
+    finalScore = Math.min(
+      100,
+      Math.round(geminiScore * 0.6 + mlScore * 0.4 + 5)
+    );
+    finalVerdict = "verdadera";
+    flags.push("consenso_verdadera");
+  }
+
+  // 3) Coincidencia fuerte: ambos falsa
+  else if (geminiVerdict === "falsa" && mlVerdict === "falsa") {
+    finalScore = Math.min(
+      100,
+      Math.round(geminiScore * 0.5 + mlScore * 0.5 + 5)
+    );
+    finalVerdict = "falsa";
+    flags.push("consenso_falsa");
+  }
+
+  // 4) LLM seguro, ML más flojo → confiar más en LLM
+  else if (geminiScore >= 70 && mlConf < MEDIUM_CONF) {
+    finalVerdict = geminiVerdict !== "desconocido" ? geminiVerdict : mlVerdict;
+    finalScore = Math.round(geminiScore * 0.7 + mlScore * 0.3);
+    flags.push("llm_predomina");
+  }
+
+  // 5) ML muy confiado, LLM flojo o dudosa → confiar más en ML
+  else if (mlConf >= HIGH_CONF && (geminiVerdict === "dudosa" || geminiScore < 60)) {
+    finalVerdict = mlVerdict;
+    finalScore = Math.round(mlScore * 0.7 + geminiScore * 0.3);
+    flags.push("ml_predomina");
+  }
+
+  // 6) Desacuerdo fuerte → requiere verificación
+  else if (
+    (geminiVerdict === "verdadera" && mlVerdict === "falsa") ||
+    (geminiVerdict === "falsa" && mlVerdict === "verdadera")
+  ) {
+    finalVerdict = "requiere_verificacion";
+    finalScore = Math.round(Math.abs(geminiScore - mlScore));
+    flags.push("desacuerdo_fuerte");
+  }
+
+  // 7) Caso neutro / fallback
+  else {
+    finalVerdict = geminiVerdict !== "desconocido" ? geminiVerdict : mlVerdict;
+    finalScore = Math.round((geminiScore + mlScore) / 2);
+    flags.push("fallback_promedio");
+  }
+
+  return {
+    finalVerdict,
+    finalScore,
+    geminiVerdict,
+    geminiScore,
+    mlVerdict,
+    mlConf,
+    mlScore,
+    flags,
+  };
+}
+
+// ======================================================
+// 🔗 INTEGRACIÓN ML LOCAL (Python)
+// ======================================================
+async function analyzeWithLocalML(newsData, geminiResult) {
+  // geminiResult ahora en realidad es el resultado del LLM de Groq;
+  // mantenemos los nombres de campos que espera Python: gemini_score, gemini_verdict.
+  return new Promise((resolve) => {
+    const scriptPath = path.join(__dirname, "ml", "predict.py");
+
+    const py = spawn("python", [scriptPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    const payload = {
       news_data: {
         title: newsData.title,
         body: newsData.body,
-        source: newsData.source
+        source: newsData.source,
       },
       gemini_score: geminiResult.score,
-      gemini_verdict: geminiResult.verdict
+      gemini_verdict: geminiResult.verdict,
     };
 
-    const response = await fetch(`${COLAB_ML_URL}/analyze-ml`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(mlRequest),
-      timeout: 10000 // 10 segundos timeout
+    let stdout = "";
+    let stderr = "";
+
+    py.stdout.on("data", (chunk) => (stdout += chunk.toString()));
+    py.stderr.on("data", (chunk) => (stderr += chunk.toString()));
+
+    py.on("close", (code) => {
+      if (code !== 0) {
+        console.error("❌ Python ML error (código %s): %s", code, stderr);
+        // Fallback: solo LLM (Groq)
+        return resolve({
+          ml_analysis: {
+            ml_verdict: "error",
+            ml_score: geminiResult.score,
+            ml_confidence: 0.5,
+            ml_features_used: 0,
+            ml_model_accuracy: 0,
+          },
+          final_verdict: geminiResult.verdict,
+          combined_confidence: geminiResult.score / 100,
+          analysis_method: "llm_only_fallback",
+        });
+      }
+
+      try {
+        const parsed = JSON.parse(stdout);
+        return resolve(parsed);
+      } catch (err) {
+        console.error("❌ Error parseando salida ML:", err);
+        console.error("STDOUT crudo:", stdout);
+        return resolve({
+          ml_analysis: {
+            ml_verdict: "error_parse",
+            ml_score: geminiResult.score,
+            ml_confidence: 0.5,
+            ml_features_used: 0,
+            ml_model_accuracy: 0,
+          },
+          final_verdict: geminiResult.verdict,
+          combined_confidence: geminiResult.score / 100,
+          analysis_method: "llm_only_fallback",
+        });
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const mlResult = await response.json();
-    console.log("✅ Colab ML respondió correctamente");
-    return mlResult;
-    
-  } catch (error) {
-    console.error("❌ Error conectando con Colab ML:", error.message);
-    // Fallback: retornar estructura vacía para no afectar flujo principal
-    return {
-      ml_analysis: { 
-        ml_verdict: "error", 
-        ml_score: 50,
-        ml_confidence: 0.5,
-        ml_features_used: 0,
-        ml_model_accuracy: 0
-      },
-      final_verdict: geminiResult.verdict,
-      combined_confidence: geminiResult.score / 100,
-      analysis_method: "gemini_only_fallback"
-    };
-  }
+    py.stdin.write(JSON.stringify(payload));
+    py.stdin.end();
+  });
 }
 
-// --- Función para procesar dataset (SIN CAMBIOS) ---
+// --- Función para procesar dataset ---
 async function processDataset(records, res, filePath) {
   try {
     await fs.ensureDir(DATA_DIR);
@@ -135,11 +263,13 @@ async function processDataset(records, res, filePath) {
     res.json({ ok: true, message: "Dataset cargado correctamente" });
   } catch (error) {
     console.error("❌ Error procesando dataset:", error);
-    res.status(500).json({ ok: false, message: "Error al procesar el archivo" });
+    res
+      .status(500)
+      .json({ ok: false, message: "Error al procesar el archivo" });
   }
 }
 
-// --- Endpoint para subir dataset (SIN CAMBIOS) ---
+// --- Endpoint para subir dataset ---
 app.post("/upload-dataset", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).send("No se subió ningún archivo.");
@@ -207,13 +337,13 @@ app.post("/upload-dataset", upload.single("file"), async (req, res) => {
 // ✅ SISTEMA DE APRENDIZAJE CONTINUO
 app.post("/feedback", async (req, res) => {
   try {
-    const { analysis_id, correct_verdict, correct_score, user_feedback } = req.body;
-    
+    const { analysis_id, correct_verdict, correct_score, user_feedback } =
+      req.body;
+
     const allAnalyses = await readAll();
-    const analysis = allAnalyses.find(a => a.id == analysis_id);
-    
+    const analysis = allAnalyses.find((a) => a.id == analysis_id);
+
     if (analysis) {
-      // Guardar feedback para mejorar el ML
       const feedbackData = {
         analysis_id,
         original_score: analysis.score,
@@ -221,33 +351,37 @@ app.post("/feedback", async (req, res) => {
         original_verdict: analysis.verdict,
         correct_verdict,
         user_feedback,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-      
-      // Guardar en dataset de entrenamiento
+
       const feedbackPath = path.join(__dirname, "data", "feedback_logs.json");
       let existingFeedback = [];
-      
+
       if (await fs.pathExists(feedbackPath)) {
         const feedbackContent = await fs.readFile(feedbackPath, "utf8");
         existingFeedback = feedbackContent ? JSON.parse(feedbackContent) : [];
       }
-      
+
       existingFeedback.push(feedbackData);
-      await fs.writeFile(feedbackPath, JSON.stringify(existingFeedback, null, 2));
-      
+      await fs.writeFile(
+        feedbackPath,
+        JSON.stringify(existingFeedback, null, 2)
+      );
+
       console.log(`✅ Feedback guardado para análisis ${analysis_id}`);
     }
-    
-    res.json({ ok: true, message: "Feedback procesado para mejorar el sistema" });
-    
+
+    res.json({
+      ok: true,
+      message: "Feedback procesado para mejorar el sistema",
+    });
   } catch (error) {
     console.error("Error procesando feedback:", error);
     res.status(500).json({ ok: false, error: error.message });
   }
 });
 
-// --- Funciones de utilidad existentes (SIN CAMBIOS) ---
+// --- Funciones de utilidad ---
 async function readAll() {
   try {
     const exists = await fs.pathExists(DATA_FILE);
@@ -264,95 +398,101 @@ async function appendRow(row) {
   const arr = await readAll();
   arr.push(row);
   await fs.ensureDir(DATA_DIR);
-  await fs.writeFile(DATA_FILE, JSON.stringify(arr, null, 2), "utf8");
+  await fs.writeFile(DATA_DIR + "/data.json", JSON.stringify(arr, null, 2), "utf8");
   return row;
 }
 
 // --- Rutas básicas ---
-app.get("/", (_req, res) => res.json({ 
-  ok: true, 
-  msg: "API Desinfo viva + ML Integration",
-  features: ["gemini", "colab_ml", "datasets", "history", "export"]
-}));
+app.get("/", (_req, res) =>
+  res.json({
+    ok: true,
+    msg: "API Desinfo viva + ML local + Groq LLaMA",
+    features: ["groq_llama3", "local_ml", "datasets", "history", "export"],
+  })
+);
 
-app.get("/health", (_req, res) => res.json({ 
-  ok: true, 
-  uptime: process.uptime(),
-  ml_integration: true 
-}));
+app.get("/health", async (_req, res) => {
+  const modelPath = path.join(__dirname, "ml", "model.joblib");
+  const mlReady = await fs.pathExists(modelPath);
+  res.json({
+    ok: true,
+    uptime: process.uptime(),
+    ml_integration: true,
+    ml_ready: mlReady,
+    llm: {
+      provider: "groq",
+      model: "llama-3.1-8b-instant",
+      configured: !!groqClient,
+    },
+  });
+});
 
-// --- NUEVO: Endpoint para verificar conexión Colab ---
+// --- Endpoint para verificar ML local ---
 app.get("/ml-status", async (_req, res) => {
   try {
-    const response = await fetch(`${COLAB_ML_URL}/health`, { timeout: 5000 });
-    const status = await response.json();
-    res.json({ 
-      ok: true, 
-      colab_connected: true,
-      colab_status: status 
+    const modelPath = path.join(__dirname, "ml", "model.joblib");
+    const exists = await fs.pathExists(modelPath);
+    res.json({
+      ok: true,
+      ml_type: "local_python",
+      model_exists: exists,
+      model_path: "backend/ml/model.joblib",
     });
   } catch (error) {
-    res.json({ 
-      ok: true, 
-      colab_connected: false,
-      error: error.message 
-    });
+    res.status(500).json({ ok: false, error: error.message });
   }
 });
 
-// --- Análisis de noticias (MEJORADO con integración ML) ---
+// --- Análisis de noticias (Groq LLaMA + ML local con reglas) ---
 app.post("/analyze", async (req, res) => {
   try {
     const { title = "", body = "", source = "" } = req.body || {};
     if (!title && !body) {
-      return res.status(400).json({ ok: false, error: "Falta title o body" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Falta title o body" });
     }
 
     console.log("📊 Iniciando análisis...");
     const analysisStart = Date.now();
 
-    // --- Análisis con Gemini (EXISTENTE - SIN CAMBIOS) ---
+    // --- Contexto del historial para el prompt ---
     const allData = await readAll();
     const ejemplos = allData
       .slice(-10)
       .map((x, i) => `${i + 1}. (${x.etiqueta || "sin_etiqueta"}) ${x.titulo}`)
       .join("\n");
 
-const prompt = `
-Eres un verificador profesional de noticias con acceso a búsqueda web en tiempo real. Analiza cualquier tipo de noticia (política, salud, deportes, farándula, local, internacional) siguiendo este protocolo:
+    const prompt = `
+Eres un verificador profesional de noticias. Analiza cualquier tipo de noticia (política, salud, deportes, farándula, local, internacional) siguiendo este protocolo:
 
-PROTOCOLO DE VERIFICACIÓN:
-1. **BÚSQUEDA WEB INMEDATA**: Buscar información actualizada sobre el tema
-2. **CONTEXTO MULTIDISCIPLINAR**: Considerar el tipo de noticia (política, salud, deportes, etc.)
-3. **FUENTES CONFIABLES**: Contrastar con medios verificados y páginas oficiales
-4. **ANÁLISIS NEUTRAL**: Sin prejuicios, basado solo en evidencia encontrada
-
-CRITERIOS POR CATEGORÍA:
-- **POLÍTICA**: Verificar en congreso.gob.pe, elperuano.pe, medios políticos
-- **SALUD**: Buscar en minsa.gob.pe, OMS, fuentes médicas
-- **DEPORTES**: Verificar en federaciones oficiales, medios deportivos
-- **FARÁNDULA**: Contrastar en redes oficiales, medios de espectáculos
-- **LOCAL**: Considerar medios regionales y fuentes locales
-
-RESPONDER EXCLUSIVAMENTE CON JSON VÁLIDO:
+1) Lee el título, fuente y cuerpo.
+2) Imagina que consultas varias fuentes abiertas y comparas:
+   - coherencia de fechas
+   - existencia de los hechos
+   - reputación de la fuente
+3) Asigna:
+   - un score numérico de 0 a 100 (score)
+   - un veredicto (verdict): "verdadera", "falsa", "dudosa" o "no_verificable"
+   - etiquetas (labels) que describan el tipo de problema o confiabilidad.
+4) Devuelve SOLO un JSON válido estrictamente con esta forma:
 
 {
   "score": 0-100,
-  "verdict": "creible" | "dudosa" | "falsa" | "no_verificable",
-  "labels": ["clickbait"|"sin_fuente"|"contradice_fuentes"|"sesgada"|"descontextualizada"|"rumor"|"satira"|"neutral"|"verificado"|"ultima_hora"],
-  "rationale": "Explicación breve basada en evidencia encontrada",
+  "verdict": "verdadera|falsa|dudosa|no_verificable",
+  "labels": ["opcional", "lista"],
+  "rationale": "Explicación breve en español",
   "evidence": [
     {
-      "claim": "afirmación específica verificada",
-      "assessment": "soporta|refuta|incierto",
-      "sources": ["https://fuente1.com", "https://fuente2.com"]
+      "claim": "frase de la noticia evaluada",
+      "assessment": "compatible|contradicha|no_verificable",
+      "sources": ["https://...","https://..."]
     }
   ],
   "checks": {
-    "fecha_coherente": true|false,
-    "fuente_identificable": true|false,
-    "consenso_en_fuentes": true|false,
-    "contexto_apropiado": true|false
+    "fecha_coherente": true|false|null,
+    "fuente_identificable": true|false|null,
+    "consenso_en_fuentes": true|false|null
   }
 }
 
@@ -361,145 +501,183 @@ TEXTO A VERIFICAR:
 - Fuente: ${source}
 - Cuerpo: ${body}
 
-EJECUTAR BÚSQUEDA WEB Y RESPONDER SOLO CON JSON.
+EJECUTA TU RAZONAMIENTO INTERNAMENTE Y RESPONDE SOLO CON EL JSON.
 `.trim();
 
+    // --- Análisis con Groq (con fallback robusto) ---
+    let llmResult;
+    let llmLatency = 0;
 
-    const geminiStart = Date.now();
-    const resp = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
-    const geminiLatency = Date.now() - geminiStart;
-
-    const text = (resp.text || "").trim();
-    let parsed = {};
     try {
-      parsed = JSON.parse(text);
-    } catch {
-      const jsonStart = text.indexOf("{");
-      const jsonEnd = text.lastIndexOf("}");
-      const onlyJson = jsonStart >= 0 ? text.slice(jsonStart, jsonEnd + 1) : "{}";
-      parsed = JSON.parse(onlyJson);
-    }
+      const llmStart = Date.now();
 
-    const geminiResult = {
-      score: typeof parsed.score === "number" ? parsed.score : 50,
-      verdict: parsed.verdict || "dudosa",
-      labels: Array.isArray(parsed.labels) ? parsed.labels : [],
-      rationale: parsed.rationale || "Sin explicación",
-      evidence: Array.isArray(parsed.evidence) ? parsed.evidence.slice(0, 3) : [],
-      checks: {
-        fecha_coherente: parsed?.checks?.fecha_coherente ?? null,
-        fuente_identificable: parsed?.checks?.fuente_identificable ?? null,
-        consenso_en_fuentes: parsed?.checks?.consenso_en_fuentes ?? null,
-      },
-    };
+      if (!groqClient) {
+        throw new Error("Cliente Groq no inicializado");
+      }
 
-    console.log(`✅ Gemini completado en ${geminiLatency}ms`);
+      const completion = await groqClient.chat.completions.create({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: "system", content: "Responde SIEMPRE con un único JSON válido." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.1,
+        max_tokens: 800,
+      });
 
-    // ✅ HU08: Generar explicaciones automáticas y comprensibles
-    const explanationData = generateSimpleExplanation(
-      { score: geminiResult.score, verdict: geminiResult.verdict, labels: geminiResult.labels },
-      geminiResult
-    );
+      llmLatency = Date.now() - llmStart;
 
-    // --- NUEVO: Análisis con Colab ML ---
-    let mlAnalysis = null;
-    try {
-      mlAnalysis = await analyzeWithColabML(
-        { title, body, source },
-        geminiResult
-      );
-      console.log("✅ Colab ML integrado correctamente");
-    } catch (mlError) {
-      console.log("⚠️ Colab ML no disponible, usando solo Gemini");
-      mlAnalysis = {
-        ml_analysis: { ml_verdict: "no_disponible", ml_score: geminiResult.score },
-        final_verdict: geminiResult.verdict,
-        combined_confidence: geminiResult.score / 100
+      const rawText = completion.choices?.[0]?.message?.content ?? "";
+      const text = String(rawText || "").trim();
+
+      let parsed = {};
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        const jsonStart = text.indexOf("{");
+        const jsonEnd = text.lastIndexOf("}");
+        const onlyJson =
+          jsonStart >= 0 ? text.slice(jsonStart, jsonEnd + 1) : "{}";
+        parsed = JSON.parse(onlyJson);
+      }
+
+      llmResult = {
+        score: typeof parsed.score === "number" ? parsed.score : 50,
+        verdict: parsed.verdict || "dudosa",
+        labels: Array.isArray(parsed.labels) ? parsed.labels : [],
+        rationale: parsed.rationale || "Sin explicación",
+        evidence: Array.isArray(parsed.evidence)
+          ? parsed.evidence.slice(0, 3)
+          : [],
+        checks: {
+          fecha_coherente: parsed?.checks?.fecha_coherente ?? null,
+          fuente_identificable: parsed?.checks?.fuente_identificable ?? null,
+          consenso_en_fuentes: parsed?.checks?.consenso_en_fuentes ?? null,
+        },
+      };
+
+      console.log(`✅ Groq LLaMA completado en ${llmLatency}ms`);
+    } catch (err) {
+      console.error("⚠️ Error en Groq LLaMA, usando valores por defecto:", err);
+
+      // Fallback para que la API NO reviente
+      llmResult = {
+        score: 50,
+        verdict: "dudosa",
+        labels: ["sin_llm_externo"],
+        rationale:
+          "No se pudo contactar con el servicio de verificación externa. El análisis se basa solo en el modelo local.",
+        evidence: [],
+        checks: {
+          fecha_coherente: null,
+          fuente_identificable: null,
+          consenso_en_fuentes: null,
+        },
       };
     }
 
-    // --- Combinar resultados ---
-// ✅ MEJOR BALANCE: 40% Gemini + 60% ML
-const mlWeight = 0.6; // 60% peso al ML
-const geminiWeight = 0.4; // 40% peso a Gemini
+    // --- Análisis con ML local ---
+    const mlAnalysis = await analyzeWithLocalML(
+      { title, body, source },
+      llmResult
+    );
 
-const mlScore = mlAnalysis.ml_analysis?.ml_score || geminiResult.score;
-const combinedScore = Math.round((geminiResult.score * geminiWeight) + (mlScore * mlWeight));
+    const mlCore = {
+      verdict: mlAnalysis.ml_analysis?.ml_verdict,
+      confidence: mlAnalysis.ml_analysis?.ml_confidence,
+      score: mlAnalysis.ml_analysis?.ml_score,
+    };
 
-// Usar el veredicto del ML si tiene alta confianza, sino de Gemini
-const finalVerdict = (mlAnalysis.ml_analysis?.ml_confidence > 0.7) 
-  ? mlAnalysis.final_verdict 
-  : geminiResult.verdict;
+    // --- Combinar LLM + ML con reglas ---
+    const combinedDecision = combineGeminiAndML(
+      { verdict: llmResult.verdict, score: llmResult.score },
+      mlCore
+    );
 
-const combinedResult = {
-  gemini: {
-    ...geminiResult,
-    latency_ms: geminiLatency,
-    weight: geminiWeight
-  },
-  ml: {
-    ...mlAnalysis.ml_analysis,
-    weight: mlWeight
-  },
-  final: {
-    verdict: finalVerdict,
-    score: combinedScore,
-    confidence: mlAnalysis.combined_confidence || (combinedScore / 100),
-    explanation: `Análisis mejorado: Gemini (${geminiWeight*100}%) + ML (${mlWeight*100}%) con ${mlAnalysis.ml_analysis?.ml_features_used || 0} características`,
-    method: "balanced_gemini_ml"
-  },
-  explanations: explanationData
-};
+    // ✅ HU08: Explicaciones usando el resultado combinado
+    const explanationData = generateSimpleExplanation(
+      {
+        score: combinedDecision.finalScore,
+        verdict: combinedDecision.finalVerdict,
+        labels: llmResult.labels,
+      },
+      llmResult
+    );
 
-    // --- Guardar en historial (VERSIÓN CORREGIDA) ---
+    const combinedConfidence =
+      mlAnalysis.combined_confidence ??
+      Math.max(
+        (llmResult.score || 0) / 100,
+        mlCore.confidence || 0
+      );
+
+    const combinedResult = {
+      // mantenemos la propiedad "gemini" para no romper el frontend,
+      // pero internamente es la salida del LLM de Groq.
+      gemini: {
+        ...llmResult,
+        latency_ms: llmLatency,
+        weight: 0.4,
+        provider: "groq",
+        model: "llama-3.1-8b-instant",
+      },
+      ml: {
+        ...mlAnalysis.ml_analysis,
+        weight: 0.6,
+      },
+      final: {
+        verdict: combinedDecision.finalVerdict,
+        score: combinedDecision.finalScore,
+        confidence: combinedConfidence,
+        flags: combinedDecision.flags,
+        explanation: `Análisis combinado por reglas: Groq LLaMA + ML local (${mlAnalysis.analysis_method || "local_ml_logreg_tfidf"})`,
+        method: "rules_engine_llm_local_ml",
+      },
+      explanations: explanationData,
+    };
+
+    // --- Guardar en historial ---
     const row = {
       id: Date.now(),
       source,
       title,
       body,
-      // ✅ DATOS PRINCIPALES para el frontend
       score: combinedResult.final.score,
       verdict: combinedResult.final.verdict,
-      // ✅ GUARDAR EXPLÍCITAMENTE labels Y rationale DE GEMINI
-      labels: geminiResult.labels || [],
-      rationale: geminiResult.rationale || "Sin explicación",
-      evidence: geminiResult.evidence || [],
-      // Datos adicionales para análisis interno
+      labels: llmResult.labels || [],
+      rationale: llmResult.rationale || "Sin explicación",
+      evidence: llmResult.evidence || [],
       explanation: combinedResult.final.explanation,
-      gemini_score: geminiResult.score,
+      gemini_score: llmResult.score, // nombre legacy, pero ahora es score del LLM
       ml_score: mlAnalysis.ml_analysis?.ml_score || null,
       ml_verdict: mlAnalysis.ml_analysis?.ml_verdict || null,
-      model: "gemini-2.5-flash + random-forest-ml",
+      model: "groq-llama-3.1-8b-instant + local-logreg-tfidf",
       latency_ms: Date.now() - analysisStart,
       created_at: new Date().toISOString(),
-      // ✅ HU08: Guardar explicaciones en el historial
-      explanations: explanationData
+      explanations: explanationData,
+      combination_flags: combinedDecision.flags,
     };
 
     await appendRow(row);
 
     console.log(`🎯 Análisis completado en ${Date.now() - analysisStart}ms`);
 
-    res.json({ 
-      ok: true, 
+    res.json({
+      ok: true,
       result: combinedResult,
-      saved: { 
-        id: row.id, 
+      saved: {
+        id: row.id,
         total_latency: Date.now() - analysisStart,
-        gemini_latency: geminiLatency
-      } 
+        gemini_latency: llmLatency, // legacy name
+      },
     });
-
   } catch (e) {
     console.error("[/analyze] Error:", e);
     res.status(500).json({ ok: false, error: "Fallo en análisis" });
   }
 });
 
-// --- Historial (SIN CAMBIOS) ---
+// --- Historial ---
 app.get("/history", async (req, res) => {
   try {
     const { q = "", limit = "100" } = req.query;
@@ -517,14 +695,18 @@ app.get("/history", async (req, res) => {
       : all;
 
     filtered.sort((a, b) => (b.id || 0) - (a.id || 0));
-    res.json({ ok: true, items: filtered.slice(0, max), total: filtered.length });
+    res.json({
+      ok: true,
+      items: filtered.slice(0, max),
+      total: filtered.length,
+    });
   } catch (e) {
     console.error("[/history] Error:", e);
     res.status(500).json({ ok: false, error: "No se pudo leer historial" });
   }
 });
 
-// --- Export CSV (SIN CAMBIOS) ---
+// --- Export CSV ---
 app.get("/export/csv", async (_req, res) => {
   try {
     const all = await readAll();
@@ -570,253 +752,281 @@ app.get("/export/csv", async (_req, res) => {
   }
 });
 
-// ✅ HU07 - CALIBRACIÓN CON DATASETS LOCALES
+// --- Calibración (HU07) ---
 app.post("/calibrate", async (req, res) => {
   try {
     console.log("🔧 Iniciando calibración del sistema...");
-    
-    // Obtener todos los análisis recientes
+
     const allAnalyses = await readAll();
-    const recentAnalyses = allAnalyses.slice(-50); // Últimos 50 análisis
-    
-    // Obtener dataset de referencia (con etiquetas verificadas)
+    const recentAnalyses = allAnalyses.slice(-50);
+
     const datasetPath = path.join(__dirname, "data", "dataset.json");
     let referenceData = [];
-    
+
     if (await fs.pathExists(datasetPath)) {
       const datasetContent = await fs.readFile(datasetPath, "utf8");
       referenceData = datasetContent ? JSON.parse(datasetContent) : [];
     }
-    
+
     const calibrationResults = [];
     let totalMatches = 0;
     let accuracySum = 0;
-    
+
     for (const analysis of recentAnalyses) {
-      // Buscar coincidencias en el dataset
       const matches = findSimilarArticles(analysis, referenceData);
-      
+
       if (matches.length > 0) {
         totalMatches++;
         const originalScore = analysis.score || 50;
         const calibratedScore = applyCalibration(originalScore, matches);
-        
-        // Calcular precisión de esta calibración
-        const accuracy = calculateCalibrationAccuracy(calibratedScore, matches);
+
+        const accuracy = calculateCalibrationAccuracy(
+          calibratedScore,
+          matches
+        );
         accuracySum += accuracy;
-        
+
         calibrationResults.push({
           analysis_id: analysis.id || analysis._id,
           original_score: originalScore,
           calibrated_score: calibratedScore,
           matches_found: matches.length,
-          accuracy: Math.round(accuracy)
+          accuracy: Math.round(accuracy),
         });
       }
     }
-    
-    // Calcular métricas generales
+
     const avgAccuracy = totalMatches > 0 ? accuracySum / totalMatches : 0;
-    const calibrationRate = recentAnalyses.length > 0 ? (totalMatches / recentAnalyses.length) * 100 : 0;
-    
-    // Guardar registro de calibración
+    const calibrationRate =
+      recentAnalyses.length > 0
+        ? (totalMatches / recentAnalyses.length) * 100
+        : 0;
+
     const calibrationLog = {
       timestamp: new Date().toISOString(),
       total_analyses: recentAnalyses.length,
       calibrated_analyses: totalMatches,
       calibration_rate: Math.round(calibrationRate * 100) / 100,
       average_accuracy: Math.round(avgAccuracy * 100) / 100,
-      results: calibrationResults
+      results: calibrationResults,
     };
-    
-    // Guardar en archivo de logs de calibración
-    const calibrationLogPath = path.join(__dirname, "data", "calibration_logs.json");
+
+    const calibrationLogPath = path.join(
+      __dirname,
+      "data",
+      "calibration_logs.json"
+    );
     let existingLogs = [];
-    
+
     if (await fs.pathExists(calibrationLogPath)) {
       const logsContent = await fs.readFile(calibrationLogPath, "utf8");
       existingLogs = logsContent ? JSON.parse(logsContent) : [];
     }
-    
+
     existingLogs.push(calibrationLog);
-    await fs.writeFile(calibrationLogPath, JSON.stringify(existingLogs, null, 2));
-    
-    console.log(`✅ Calibración completada: ${totalMatches}/${recentAnalyses.length} análisis calibrados`);
-    
+    await fs.writeFile(
+      calibrationLogPath,
+      JSON.stringify(existingLogs, null, 2)
+    );
+
+    console.log(
+      `✅ Calibración completada: ${totalMatches}/${recentAnalyses.length} análisis calibrados`
+    );
+
     res.json({
       ok: true,
       message: `Calibración completada: ${totalMatches}/${recentAnalyses.length} análisis calibrados`,
       avg_accuracy: Math.round(avgAccuracy * 100) / 100,
       calibration_rate: Math.round(calibrationRate * 100) / 100,
       results: calibrationResults,
-      log_id: calibrationLog.timestamp
+      log_id: calibrationLog.timestamp,
     });
-    
   } catch (error) {
     console.error("❌ Error en calibración:", error);
     res.status(500).json({ ok: false, error: error.message });
   }
 });
 
-// ✅ HU07: Endpoint para obtener logs de calibración
 app.get("/calibration-logs", async (req, res) => {
   try {
-    const calibrationLogPath = path.join(__dirname, "data", "calibration_logs.json");
-    
-    if (!await fs.pathExists(calibrationLogPath)) {
+    const calibrationLogPath = path.join(
+      __dirname,
+      "data",
+      "calibration_logs.json"
+    );
+
+    if (!(await fs.pathExists(calibrationLogPath))) {
       return res.json({ ok: true, logs: [] });
     }
-    
+
     const logsContent = await fs.readFile(calibrationLogPath, "utf8");
     const logs = logsContent ? JSON.parse(logsContent) : [];
-    
-    // Ordenar por fecha más reciente primero
+
     logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
-    res.json({ ok: true, logs: logs.slice(0, 10) }); // Últimos 10 logs
-    
+
+    res.json({ ok: true, logs: logs.slice(0, 10) });
   } catch (error) {
     console.error("❌ Error obteniendo logs de calibración:", error);
     res.status(500).json({ ok: false, error: error.message });
   }
 });
 
-// ✅ HU08: Función para generar explicaciones automáticas
+// ✅ HU08: Explicaciones (igual que tenías, usando score/verdict)
 function generateSimpleExplanation(analysisData, geminiResult) {
   const score = analysisData.score || 0;
-  const verdict = analysisData.verdict || 'no_verificable';
+  const verdict = analysisData.verdict || "no_verificable";
   const labels = analysisData.labels || [];
-  
-  // Explicaciones basadas en el score y veredicto
+
   let simpleExplanation = "";
   let detailedExplanation = "";
-  
+
   if (verdict === "falsa" || score < 30) {
-    simpleExplanation = "🔴 Esta noticia contiene información falsa o muy engañosa.";
+    simpleExplanation =
+      "🔴 Esta noticia contiene información falsa o muy engañosa.";
     detailedExplanation = `**Puntaje muy bajo (${score}/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.`;
-  } 
-  else if (verdict === "dudosa" || (score >= 30 && score < 60)) {
-    simpleExplanation = "🟡 La información presenta señales de alerta y requiere verificación.";
+  } else if (verdict === "dudosa" || (score >= 30 && score < 60)) {
+    simpleExplanation =
+      "🟡 La información presenta señales de alerta y requiere verificación.";
     detailedExplanation = `**Puntaje medio (${score}/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.`;
-  }
-  else if (verdict === "real" || score >= 60) {
+  } else if (
+    verdict === "real" ||
+    verdict === "verdadera" ||
+    score >= 60
+  ) {
     simpleExplanation = "🟢 La noticia parece confiable y bien fundamentada.";
     detailedExplanation = `**Puntaje alto (${score}/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.`;
-  }
-  else {
-    simpleExplanation = "⚪ No se pudo determinar la veracidad con la información disponible.";
+  } else {
+    simpleExplanation =
+      "⚪ No se pudo determinar la veracidad con la información disponible.";
     detailedExplanation = `**Puntaje indeterminado (${score}/100):** Se requiere más contexto o fuentes adicionales para una evaluación completa.`;
   }
-  
-  // Personalizar basado en labels específicos
+
   const factors = [];
-  if (labels.includes("clickbait") || labels.some(l => l.includes("titular") && l.includes("engamoso"))) {
+  if (
+    labels.includes("clickbait") ||
+    labels.some((l) => l.includes("titular") && l.includes("engamoso"))
+  ) {
     factors.push("• El titular es sensacionalista o engañoso");
   }
-  if (labels.includes("sin_fuente") || labels.some(l => l.includes("fuente") && l.includes("confiable"))) {
+  if (
+    labels.includes("sin_fuente") ||
+    labels.some((l) => l.includes("fuente") && l.includes("confiable"))
+  ) {
     factors.push("• Las fuentes citadas son poco confiables o no existen");
   }
-  if (labels.includes("contradice_fuentes") || labels.some(l => l.includes("contradice"))) {
+  if (
+    labels.includes("contradice_fuentes") ||
+    labels.some((l) => l.includes("contradice"))
+  ) {
     factors.push("• La información contradice fuentes establecidas");
   }
-  if (labels.includes("datos_verificados") || labels.some(l => l.includes("verificado"))) {
+  if (
+    labels.includes("datos_verificados") ||
+    labels.some((l) => l.includes("verificado"))
+  ) {
     factors.push("• Los datos coinciden con fuentes oficiales");
   }
-  if (labels.includes("consenso_en_fuentes") || labels.some(l => l.includes("consenso"))) {
+  if (
+    labels.includes("consenso_en_fuentes") ||
+    labels.some((l) => l.includes("consenso"))
+  ) {
     factors.push("• Múltiples fuentes confiables confirman la información");
   }
-  
+
   if (factors.length > 0) {
     detailedExplanation += "\n\n**Factores clave:**\n" + factors.join("\n");
   }
-  
-  // Recomendación final
+
   let recommendation = "";
   if (score >= 70) recommendation = "✅ Puede compartirse con confianza";
-  else if (score >= 40) recommendation = "⚠️ Verificar con otras fuentes antes de compartir";
+  else if (score >= 40)
+    recommendation = "⚠️ Verificar con otras fuentes antes de compartir";
   else recommendation = "❌ No se recomienda compartir";
-  
+
   detailedExplanation += `\n\n**Recomendación:** ${recommendation}`;
-  
+
   return {
     simple: simpleExplanation,
     detailed: detailedExplanation,
     factors: factors,
     recommendation: recommendation,
-    confidence: score >= 80 ? "alta" : score >= 50 ? "media" : "baja"
+    confidence: score >= 80 ? "alta" : score >= 50 ? "media" : "baja",
   };
 }
 
 // Funciones auxiliares para calibración
 function findSimilarArticles(analysis, referenceData) {
   const similarArticles = [];
-  const analysisText = `${analysis.title || ''} ${analysis.body || ''}`.toLowerCase();
-  
+  const analysisText = `${analysis.title || ""} ${
+    analysis.body || ""
+  }`.toLowerCase();
+
   for (const refArticle of referenceData) {
-    const refText = `${refArticle.titulo || ''} ${refArticle.cuerpo || ''}`.toLowerCase();
-    
-    // Calcular similitud básica (en producción usaríamos embeddings)
+    const refText = `${refArticle.titulo || ""} ${
+      refArticle.cuerpo || ""
+    }`.toLowerCase();
     const similarity = calculateTextSimilarity(analysisText, refText);
-    
-    if (similarity > 0.6) { // Umbral de similitud ajustado
+
+    if (similarity > 0.6) {
       similarArticles.push({
         ref_article: refArticle,
         similarity_score: similarity,
-        verified_score: mapEtiquetaToScore(refArticle.etiqueta)
+        verified_score: mapEtiquetaToScore(refArticle.etiqueta),
       });
     }
   }
-  
+
   return similarArticles;
 }
 
 function mapEtiquetaToScore(etiqueta) {
-  // Mapear etiquetas del dataset a scores numéricos
   const scoreMap = {
-    "real": 85,
-    "verdadero": 85,
-    "confiable": 80,
-    "dudoso": 40,
-    "falso": 20,
-    "fake": 15,
-    "engañoso": 30
+    real: 85,
+    verdadero: 85,
+    verdadera: 85,
+    confiable: 80,
+    dudoso: 40,
+    dudosa: 40,
+    falso: 20,
+    falsa: 20,
+    fake: 15,
+    engañoso: 30,
   };
-  
+
   return scoreMap[etiqueta?.toLowerCase()] || 50;
 }
 
 function applyCalibration(originalScore, matches) {
   if (matches.length === 0) return originalScore;
-  
-  const verifiedScores = matches.map(match => match.verified_score);
-  const avgVerified = verifiedScores.reduce((a, b) => a + b, 0) / verifiedScores.length;
-  
-  // Calibrar: 60% score original + 40% promedio verificado
-  const calibrated = (originalScore * 0.6) + (avgVerified * 0.4);
-  return Math.max(0, Math.min(100, Math.round(calibrated * 10) / 10)); // Asegurar entre 0-100
+
+  const verifiedScores = matches.map((match) => match.verified_score);
+  const avgVerified =
+    verifiedScores.reduce((a, b) => a + b, 0) / verifiedScores.length;
+
+  const calibrated = originalScore * 0.6 + avgVerified * 0.4;
+  return Math.max(0, Math.min(100, Math.round(calibrated * 10) / 10));
 }
 
 function calculateCalibrationAccuracy(calibratedScore, matches) {
   if (matches.length === 0) return 0;
-  
-  const verifiedScores = matches.map(match => match.verified_score);
-  const avgVerified = verifiedScores.reduce((a, b) => a + b, 0) / verifiedScores.length;
-  
-  // Precisión = 100% - diferencia porcentual absoluta
+
+  const verifiedScores = matches.map((match) => match.verified_score);
+  const avgVerified =
+    verifiedScores.reduce((a, b) => a + b, 0) / verifiedScores.length;
+
   const accuracy = 100 - Math.abs(calibratedScore - avgVerified);
   return Math.max(0, accuracy);
 }
 
 function calculateTextSimilarity(text1, text2) {
-  // Implementación básica de similitud de Jaccard
-  const words1 = new Set(text1.split(/\s+/).filter(w => w.length > 3));
-  const words2 = new Set(text2.split(/\s+/).filter(w => w.length > 3));
-  
+  const words1 = new Set(text1.split(/\s+/).filter((w) => w.length > 3));
+  const words2 = new Set(text2.split(/\s+/).filter((w) => w.length > 3));
+
   if (words1.size === 0 || words2.size === 0) return 0;
-  
-  const intersection = new Set([...words1].filter(x => words2.has(x)));
+
+  const intersection = new Set([...words1].filter((x) => words2.has(x)));
   const union = new Set([...words1, ...words2]);
-  
+
   return union.size > 0 ? intersection.size / union.size : 0;
 }
 
@@ -838,10 +1048,11 @@ process.on("unhandledRejection", (reason) => {
 try {
   app.listen(PORT, () => {
     console.log("✅ API en puerto", PORT);
-    console.log("🤖 Integración ML activa:", COLAB_ML_URL);
+    console.log("🤖 Integración ML local activa (Python en backend/ml)");
+    console.log("🧠 LLM externo: Groq LLaMA 3.1 8B (si GROQ_API_KEY está configurada)");
     console.log("📊 Endpoints disponibles:");
-    console.log("   POST /analyze          - Análisis con Gemini + ML");
-    console.log("   GET  /ml-status        - Estado conexión Colab");
+    console.log("   POST /analyze          - Análisis con Groq LLaMA + ML local");
+    console.log("   GET  /ml-status        - Estado del modelo local");
     console.log("   POST /upload-dataset   - Subir datasets");
     console.log("   GET  /history          - Historial de análisis");
     console.log("   GET  /export/csv       - Exportar datos");

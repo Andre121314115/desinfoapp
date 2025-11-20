@@ -1278,5 +1278,187 @@
       "recommendation": "❌ No se recomienda compartir",
       "confidence": "baja"
     }
+  },
+  {
+    "id": 1763617491856,
+    "source": "Diario Correo",
+    "title": "Jose Jeri es nuevo presidente del Per�",
+    "body": "Vacaron a Dina Boluarte y colocan a Jose Jeri como nuevo presidente",
+    "score": 50,
+    "verdict": "dudosa",
+    "labels": [
+      "sin_gemini"
+    ],
+    "rationale": "No se pudo contactar con el servicio de verificación externa. El análisis se basa solo en el modelo local.",
+    "evidence": [],
+    "explanation": "Análisis combinado por reglas: Gemini + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 50,
+    "ml_score": 50,
+    "ml_verdict": "verdadera",
+    "model": "gemini-2.5-flash + local-logreg-tfidf",
+    "latency_ms": 9080,
+    "created_at": "2025-11-20T05:44:51.856Z",
+    "explanations": {
+      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
+      "detailed": "**Puntaje medio (50/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
+      "factors": [],
+      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "fallback_promedio"
+    ]
+  },
+  {
+    "id": 1763617648294,
+    "source": "Diario Correo",
+    "title": "Jose Jeri es nuevo presidente del Per�",
+    "body": "Vacaron a Dina Boluarte y colocan a Jose Jeri como nuevo presidente",
+    "score": 50,
+    "verdict": "dudosa",
+    "labels": [
+      "sin_gemini"
+    ],
+    "rationale": "No se pudo contactar con el servicio de verificación externa. El análisis se basa solo en el modelo local.",
+    "evidence": [],
+    "explanation": "Análisis combinado por reglas: Gemini + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 50,
+    "ml_score": 50,
+    "ml_verdict": "verdadera",
+    "model": "gemini-2.5-flash + local-logreg-tfidf",
+    "latency_ms": 2852,
+    "created_at": "2025-11-20T05:47:28.294Z",
+    "explanations": {
+      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
+      "detailed": "**Puntaje medio (50/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
+      "factors": [],
+      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "fallback_promedio"
+    ]
+  },
+  {
+    "id": 1763618090420,
+    "source": "Diario Correo",
+    "title": "Jose Jeri es nuevo presidente del Per�",
+    "body": "Vacaron a Dina Boluarte y colocan a Jose Jeri como nuevo presidente",
+    "score": 50,
+    "verdict": "dudosa",
+    "labels": [
+      "sin_gemini"
+    ],
+    "rationale": "No se pudo contactar con el servicio de verificación externa. El análisis se basa solo en el modelo local.",
+    "evidence": [],
+    "explanation": "Análisis combinado por reglas: Gemini + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 50,
+    "ml_score": 50,
+    "ml_verdict": "verdadera",
+    "model": "gemini-2.5-flash + local-logreg-tfidf",
+    "latency_ms": 2567,
+    "created_at": "2025-11-20T05:54:50.420Z",
+    "explanations": {
+      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
+      "detailed": "**Puntaje medio (50/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
+      "factors": [],
+      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "fallback_promedio"
+    ]
+  },
+  {
+    "id": 1763621336347,
+    "source": "Portal Congreso de la República",
+    "title": "José Jerí Oré asume como presidente de la república tras la vacancia de Dina Boluarte",
+    "body": "Centro de Noticias del Congreso\n\n10 Oct 2025 | 1:44 h\n\nA la una de la madrugada de hoy, tras una intensa y ardua jornada, José Enrique Jerí Oré juró ante el Pleno del Congreso como presidente de la república tras la aprobación de la vacancia de Dina Boluarte Zegarra, ahora exmandataria.\n\n“Asumo de acuerdo con la Constitución Política del Perú, desde este momento, hasta el 28 de julio 2026, que defenderé mi país, la soberanía nacional, la integridad física y moral de nuestro país, de nuestra república, la independencia de nuestras instituciones democráticas, que cumpliré y haré cumplir nuestra Constitución Política, las leyes de nuestro país, y las libertades de nuestra república”, expresó Jerí Oré en su juramento.\n\n\n\nDurante su discurso de orden, Jerí Oré anunció que asume con humildad la presidencia de la república por sucesión constitucional, “para instalar y dirigir un gobierno de empatía y de reconciliación nacional de amplia base y para el cual tenemos que construir, juntos, acuerdos mínimos”.\n\nSostuvo que el Perú atraviesa una crisis política constante que pareciera no tener fin por gobiernos que no terminan su mandato, instituciones debilitadas y una ciudadanía cansada.\n\nEl mandatario pidió perdón a la población por los errores que se han podido cometer. “A todos ellos las disculpas del caso y una promesa: La promesa de comenzar a construir, sentar las bases de un país que permita, justamente, generar una reconciliación entre todos los peruanos. Debemos sembrar esas bases el día de hoy”, dijo.\n\n\n\nGuerra contra la delincuencia\nEn otro momento, Jerí Oré anunció la declaratoria de guerra contra la delincuencia, convertida hoy en el principal problema del país.\n\n“Para ello tenemos a la Policía Nacional, nuestras Fuerzas Armadas y debemos tener el compromiso de las instituciones del Estado, del Poder Judicial, de la Fiscalía de la Nación, para no solo declararle la guerra a la delincuencia y ganarle la guerra de una vez por todas”, enfatizó.\n\nJerí Oré también asumió el compromiso de garantizar con transparencia la legalidad, limpieza, orden y neutralidad del próximo proceso electoral.\n\n“Hoy estamos en la mira de todo el mundo, no solamente por la sucesión constitucional que acabamos de evidenciar, sino porque, justamente, nuestro país tiene esa oportunidad para ser el país que siempre debió ser en el continente”, sentenció.",
+    "score": 72,
+    "verdict": "verdadera",
+    "labels": [
+      "coherencia_fecha",
+      "fuente_identificable"
+    ],
+    "rationale": "La noticia se basa en información oficial del Portal Congreso de la República, que es una fuente confiable. Sin embargo, se requiere verificar la coherencia de fechas y la existencia de los hechos en otras fuentes.",
+    "evidence": [
+      {
+        "claim": "José Jerí Oré asumió como presidente de la república tras la vacancia de Dina Boluarte",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.congreso.gob.pe/noticias/jose-jeri-ore-asume-como-presidente-de-la-republica-tras-la-vacancia-de-dina-boluarte"
+        ]
+      },
+      {
+        "claim": "Jerí Oré anunció la declaratoria de guerra contra la delincuencia",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.congreso.gob.pe/noticias/jose-jeri-ore-asume-como-presidente-de-la-republica-tras-la-vacancia-de-dina-boluarte"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 80,
+    "ml_score": 53,
+    "ml_verdict": "falsa",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 2624,
+    "created_at": "2025-11-20T06:48:56.347Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (72/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "llm_predomina"
+    ]
+  },
+  {
+    "id": 1763621549551,
+    "source": "Diario Andino Digital",
+    "title": "Gobierno anuncia creación de “bono por conexión a internet” de S/ 380 para todos los peruanos desde febrero",
+    "body": "El Ministerio de Desarrollo e Inclusión Social habría anunciado este miércoles un nuevo programa llamado “Bono Conectividad 2025”, que entregaría S/ 380 a todas las personas mayores de 18 años que cuenten con acceso a internet en sus viviendas.\n\nSegún la supuesta resolución difundida en redes sociales, el beneficio se otorgaría automáticamente “sin necesidad de inscripción previa” y se depositaría en cualquier cuenta bancaria registrada con DNI.\nLa supuesta norma también indicaría que el bono aplicaría “a partir del 5 de febrero del 2025” para todos los departamentos del país, incluyendo a residentes en zonas rurales.\n\nEn declaraciones citadas por páginas no oficiales, un funcionario no identificado habría señalado que el bono busca “reducir la brecha digital entre regiones”, aunque el comunicado no aparece en la web oficial de ningún ministerio.\n\nLa noticia se viralizó rápidamente en Facebook y WhatsApp, pero no presenta enlaces verificables ni declaraciones oficiales de autoridades del MIDIS o PCM.",
+    "score": 42,
+    "verdict": "falsa",
+    "labels": [
+      "falta de información oficial",
+      "reputación de la fuente dudosa"
+    ],
+    "rationale": "La noticia no presenta evidencia oficial de la creación del programa 'Bono Conectividad 2025' y la fuente, Diario Andino Digital, no es confiable según la información disponible.",
+    "evidence": [
+      {
+        "claim": "El Ministerio de Desarrollo e Inclusión Social habría anunciado un nuevo programa llamado 'Bono Conectividad 2025'",
+        "assessment": "no_verificable",
+        "sources": [
+          "https://www.diarioandino.com.pe/"
+        ]
+      },
+      {
+        "claim": "El bono se otorgaría automáticamente 'sin necesidad de inscripción previa'",
+        "assessment": "contradicha",
+        "sources": [
+          "https://www.diarioandino.com.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 20,
+    "ml_score": 54,
+    "ml_verdict": "falsa",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 2431,
+    "created_at": "2025-11-20T06:52:29.551Z",
+    "explanations": {
+      "simple": "🔴 Esta noticia contiene información falsa o muy engañosa.",
+      "detailed": "**Puntaje muy bajo (42/100):** La información presenta múltiples problemas de veracidad. Se detectaron afirmaciones sin sustento factual y fuentes no confiables.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
+      "factors": [],
+      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
+      "confidence": "baja"
+    },
+    "combination_flags": [
+      "consenso_falsa"
+    ]
   }
 ]
