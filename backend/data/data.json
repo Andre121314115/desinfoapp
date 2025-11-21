@@ -1,35 +1,5 @@
 [
   {
-    "id": 1763626362608,
-    "source": "Portal Congreso de la República",
-    "title": "José Jerí Oré asume como presidente de la república tras la vacancia de Dina Boluarte",
-    "body": "Centro de Noticias del Congreso\n\n10 Oct 2025 | 1:44 h\n\nA la una de la madrugada de hoy, tras una intensa y ardua jornada, José Enrique Jerí Oré juró ante el Pleno del Congreso como presidente de la república tras la aprobación de la vacancia de Dina Boluarte Zegarra, ahora exmandataria.\n\n“Asumo de acuerdo con la Constitución Política del Perú, desde este momento, hasta el 28 de julio 2026, que defenderé mi país, la soberanía nacional, la integridad física y moral de nuestro país, de nuestra república, la independencia de nuestras instituciones democráticas, que cumpliré y haré cumplir nuestra Constitución Política, las leyes de nuestro país, y las libertades de nuestra república”, expresó Jerí Oré en su juramento.\n\n\n\nDurante su discurso de orden, Jerí Oré anunció que asume con humildad la presidencia de la república por sucesión constitucional, “para instalar y dirigir un gobierno de empatía y de reconciliación nacional de amplia base y para el cual tenemos que construir, juntos, acuerdos mínimos”.\n\nSostuvo que el Perú atraviesa una crisis política constante que pareciera no tener fin por gobiernos que no terminan su mandato, instituciones debilitadas y una ciudadanía cansada.\n\nEl mandatario pidió perdón a la población por los errores que se han podido cometer. “A todos ellos las disculpas del caso y una promesa: La promesa de comenzar a construir, sentar las bases de un país que permita, justamente, generar una reconciliación entre todos los peruanos. Debemos sembrar esas bases el día de hoy”, dijo.\n\n\n\nGuerra contra la delincuencia\nEn otro momento, Jerí Oré anunció la declaratoria de guerra contra la delincuencia, convertida hoy en el principal problema del país.\n\n“Para ello tenemos a la Policía Nacional, nuestras Fuerzas Armadas y debemos tener el compromiso de las instituciones del Estado, del Poder Judicial, de la Fiscalía de la Nación, para no solo declararle la guerra a la delincuencia y ganarle la guerra de una vez por todas”, enfatizó.\n\nJerí Oré también asumió el compromiso de garantizar con transparencia la legalidad, limpieza, orden y neutralidad del próximo proceso electoral.\n\n“Hoy estamos en la mira de todo el mundo, no solamente por la sucesión constitucional que acabamos de evidenciar, sino porque, justamente, nuestro país tiene esa oportunidad para ser el país que siempre debió ser en el continente”, sentenció.",
-    "score": 52,
-    "verdict": "dudosa",
-    "labels": [
-      "sin_llm_externo"
-    ],
-    "rationale": "No se pudo contactar con el servicio de verificación externa. El análisis se basa solo en el modelo local.",
-    "evidence": [],
-    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
-    "gemini_score": 50,
-    "ml_score": 53,
-    "ml_verdict": "falsa",
-    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
-    "latency_ms": 2028,
-    "created_at": "2025-11-20T08:12:42.608Z",
-    "explanations": {
-      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
-      "detailed": "**Puntaje medio (52/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
-      "factors": [],
-      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
-      "confidence": "media"
-    },
-    "combination_flags": [
-      "fallback_promedio"
-    ]
-  },
-  {
     "id": 1763626421016,
     "source": "Portal Congreso de la República",
     "title": "José Jerí Oré asume como presidente de la república tras la vacancia de Dina Boluarte",
@@ -64,6 +34,53 @@
     "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
     "latency_ms": 2457,
     "created_at": "2025-11-20T08:13:41.016Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (72/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "llm_predomina"
+    ]
+  },
+  {
+    "id": 1763652527868,
+    "source": "",
+    "title": "Presuntos extorsionadores balean al tiktoker ‘Tío Winner’ en Trujillo: uno de sus guardaespaldas murió tras ataque",
+    "body": "La Policía Nacional investiga un posible caso de extorsión vinculado a una banda que habría tenido en la mira al creador de contenido\nUn ataque armado registrado en la avenida Miraflores, en la ciudad de Trujillo, dejó como saldo un fallecido y dos personas heridas, entre ellas el reconocido creador de contenido Cristian Flores, conocido en redes sociales como “Tío Winner”. El suceso ocurrió la mañana del sábado cuando Flores arribó a un local comercial junto a su equipo de seguridad.\n\nSegún imágenes captadas por cámaras de seguridad, dos sujetos armados interceptaron al tiktoker y, sin mediar palabra, dispararon contra él y su acompañantes. Producto del ataque, uno de los guardaespaldas murió en el lugar producto de los disparos, mientras que otra persona resultó herida y fue trasladada de emergencia a un centro de salud. Flores también recibió un impacto de bala, por lo que fue atendido y posteriormente llevado a la Divincri para rendir su declaración.\n\nDisparos provocaron pánico\n\nEl incidente se produjo en una zona altamente transitada de Trujillo, donde además se desarrollaba un evento en el colegio Ricardo Palma, lo que generó preocupación entre padres de familia y vecinos. Testigos señalaron que se escucharon al menos siete disparos, los cuales impactaron contra la fachada y la ventana del inmueble.\n\nResidentes de la zona criticaron la demora de la Policía Nacional en llegar al lugar, lo que incrementó la sensación de inseguridad y el temor de que los atacantes pudieran regresar. Tras el atentado, los efectivos policiales aseguraron la escena, realizaron el levantamiento del cuerpo y comenzaron a recabar evidencias para esclarecer lo ocurrido.",
+    "score": 72,
+    "verdict": "verdadera",
+    "labels": [
+      "conflicto_armado",
+      "extorsión",
+      "seguridad"
+    ],
+    "rationale": "La noticia se basa en información proporcionada por la Policía Nacional y testigos del incidente, aunque hay algunas inconsistencias en la descripción de los hechos.",
+    "evidence": [
+      {
+        "claim": "Dos sujetos armados interceptaron al tiktoker y dispararon contra él y su acompañantes.",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.peru21.pe/noticias/trujillo/presuntos-extorsionadores-balean-al-tiktoker-tio-winner-en-trujillo-uno-de-sus-guardaespaldas-murio-tras-ataque-456321"
+        ]
+      },
+      {
+        "claim": "Uno de los guardaespaldas murió en el lugar producto de los disparos.",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.peru21.pe/noticias/trujillo/presuntos-extorsionadores-balean-al-tiktoker-tio-winner-en-trujillo-uno-de-sus-guardaespaldas-murio-tras-ataque-456321"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 80,
+    "ml_score": 52,
+    "ml_verdict": "falsa",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 3760,
+    "created_at": "2025-11-20T15:28:47.868Z",
     "explanations": {
       "simple": "🟢 La noticia parece confiable y bien fundamentada.",
       "detailed": "**Puntaje alto (72/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
