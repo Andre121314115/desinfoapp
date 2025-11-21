@@ -148,5 +148,155 @@
     "titulo": "Gobierno anuncia plan de seguridad ciudadana 2026",
     "cuerpo": "José Jeri detalló medidas contra el crimen organizado.",
     "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "José Jeri asume la presidencia del Perú tras destitución de Boluarte",
+    "cuerpo": "El Congreso aprobó la vacancia presidencial y José Jeri asumió el mando inmediatamente el 10 de octubre de 2025.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "Presidente José Jeri anuncia nuevas medidas económicas para 2026",
+    "cuerpo": "El nuevo mandatario presentó un paquete de reactivación económica enfocado en inversión pública y apoyo a MYPES.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Inflación en Perú cierra el año con una reducción significativa",
+    "cuerpo": "El Banco Central de Reserva informó que la inflación anual se redujo a su nivel más bajo en cinco años.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "La República",
+    "titulo": "Falsamente afirman que el nuevo gobierno eliminará la vacunación obligatoria",
+    "cuerpo": "Circula en redes un mensaje que asegura que el Estado suspenderá campañas de vacunación, algo desmentido por el MINSA.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Perú firma acuerdo de cooperación energética con Chile",
+    "cuerpo": "Los gobiernos de ambos países anunciaron un proyecto conjunto para la interconexión eléctrica.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Diario Correo",
+    "titulo": "Detectan noticia falsa sobre supuesta renuncia del presidente Jeri",
+    "cuerpo": "Usuarios difundieron una supuesta carta donde José Jeri renuncia al cargo, pero el Ejecutivo lo desmintió.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "Sunat anuncia modernización de plataformas digitales para 2026",
+    "cuerpo": "La entidad implementará nuevos servicios automatizados para reducir tiempos de trámites.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "TV Perú",
+    "titulo": "Falso: cadena viral asegura que se prohibirá el uso de celulares en colegios",
+    "cuerpo": "El Ministerio de Educación desmintió la información y calificó la cadena como engañosa.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Perú supera récord de exportaciones mineras en 2025",
+    "cuerpo": "El Ministerio de Energía y Minas informó un incremento significativo impulsado por el cobre.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "Falsamente acusan al MEF de emitir billetes sin respaldo",
+    "cuerpo": "Un video viral afirmaba que el MEF ordenó imprimir billetes sin aprobación del BCR, lo que fue negado oficialmente.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "José Jeri nombra nuevo gabinete ministerial",
+    "cuerpo": "El presidente juramentó a su primer Consejo de Ministros con un enfoque en gobernabilidad democrática.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "La República",
+    "titulo": "Cae noticia falsa sobre ingreso de extraterrestres por la frontera",
+    "cuerpo": "Una publicación sentimental se viralizó, pero las autoridades la calificaron como totalmente falsa.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Perú crece 4.3% en tercer trimestre del 2025",
+    "cuerpo": "El INEI reportó una recuperación importante del sector construcción y servicios.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "MINSA confirma incremento de camas UCI para 2026",
+    "cuerpo": "El ministerio ejecutará un plan de expansión hospitalaria a nivel nacional.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "Falso: cadena afirma que habrá toque de queda indefinido",
+    "cuerpo": "El Ministerio del Interior descartó cualquier medida de restricción.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Perú ingresa a iniciativa regional de inteligencia artificial",
+    "cuerpo": "El gobierno busca modernizar servicios públicos con IA responsable y regulada.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "La República",
+    "titulo": "Se viraliza noticia falsa sobre supuesta desaparición del dólar",
+    "cuerpo": "Economistas confirman que no existe ningún riesgo para la divisa estadounidense.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Nuevas inversiones mineras llegan al país",
+    "cuerpo": "Proyectos de capital extranjero priorizarán energías limpias y minería sostenible.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "Falsean documento que asegura cierre del Congreso",
+    "cuerpo": "La Policía detectó que el archivo difundido en redes era manipulado digitalmente.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "José Jeri encabeza reunión con gobernadores regionales",
+    "cuerpo": "El diálogo se centró en seguridad, obras paralizadas y salud pública.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Perú anuncia participación en cumbre climática 2026",
+    "cuerpo": "El Ministerio del Ambiente detalló proyectos de mitigación para presentar en la COP.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "La República",
+    "titulo": "Fake news afirma que habrá apagón nacional programado",
+    "cuerpo": "El COES aclaró que no existe ningún tipo de corte masivo.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Empleo formal crece en Lima Metropolitana",
+    "cuerpo": "El MTPE señaló un aumento sostenido en sectores comercio y servicios.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "Falso: mensaje viral advierte de terremoto exacto para este viernes",
+    "cuerpo": "IGP recordó que los sismos no se pueden predecir.",
+    "etiqueta": "falsa"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Gobierno anuncia plan de seguridad ciudadana 2026",
+    "cuerpo": "José Jeri detalló medidas contra el crimen organizado.",
+    "etiqueta": "verdadera"
   }
 ]

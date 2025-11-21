@@ -1,0 +1,62 @@
+[
+  {
+    "fuente": "Andina",
+    "titulo": "Perú inicia operación del viaducto de la Línea 2 del Metro de Lima",
+    "cuerpo": "El Ministerio de Transportes informó que el primer tramo elevado de la Línea 2 comenzó pruebas operativas con trenes automatizados.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "BCR mantiene proyección de crecimiento económico para el 2025",
+    "cuerpo": "El Banco Central señaló que la inversión privada y el sector servicios impulsarán la recuperación económica.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Inversión minera en Perú crece impulsada por nuevos proyectos de cobre",
+    "cuerpo": "El Ministerio de Energía y Minas reportó que las inversiones superaron los 1,200 millones de dólares en el primer semestre del 2025.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "Senamhi alerta incremento de temperaturas en la costa norte",
+    "cuerpo": "La institución advirtió anomalías térmicas que superarán los 3°C respecto a lo normal durante la semana.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Perú expande cobertura de fibra óptica en zonas rurales",
+    "cuerpo": "El Ministerio de Transportes anunció que más de 800 localidades se conectaron al backbone nacional de Internet.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "La República",
+    "titulo": "CUSCO: Machu Picchu recibe más de 1.5 millones de turistas en 2024",
+    "cuerpo": "La Dirección Desconcentrada de Cultura informó un incremento del turismo internacional en el santuario histórico.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Gestión",
+    "titulo": "Sector agroexportador peruano crece con fuerza gracias al mango y al arándano",
+    "cuerpo": "La Asociación de Gremios Productores Agrarios del Perú informó que las exportaciones agrícolas sumaron US$ 5,300 millones.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "El Comercio",
+    "titulo": "Perú avanza en acuerdos comerciales con Corea del Sur",
+    "cuerpo": "El Ministerio de Comercio Exterior informó nuevos capítulos sobre servicios digitales y propiedad intelectual.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "RPP Noticias",
+    "titulo": "Minsa reporta reducción de hospitalizaciones por COVID-19",
+    "cuerpo": "El Ministerio de Salud indicó que los casos graves disminuyeron gracias a campañas de vacunación reforzada.",
+    "etiqueta": "verdadera"
+  },
+  {
+    "fuente": "Andina",
+    "titulo": "Perú fortalece cooperación científica con la Unión Europea",
+    "cuerpo": "Se firmó un acuerdo para investigación conjunta en energías renovables e innovación tecnológica.",
+    "etiqueta": "verdadera"
+  }
+]

@@ -51,11 +51,9 @@ function initNavigation() {
 // Estado del sistema (API + ML local)
 // =========================
 async function updateSystemStatus() {
-  // OJO: dejo los mismos IDs que tu HTML actual
-  const statusGemini = $("#statusGemini"); // ahora será "API"
+  const statusGemini = $("#statusGemini"); // ahora “API”
   const statusML = $("#statusML");
 
-  // Si el HTML no tiene esos elementos, salimos
   if (!statusGemini && !statusML) return;
 
   // Estado ML local
@@ -160,7 +158,6 @@ async function showAnalysisResults(resultData, analysisId = null) {
   if (!resultBox) return;
 
   const final = resultData.final || {};
-  // Permitimos que el backend use llm/groq/gemini sin romper el frontend
   const llm = resultData.llm || resultData.groq || resultData.gemini || {};
   const mlPart = resultData.ml || {};
   const explanations = resultData.explanations || {};
@@ -172,7 +169,6 @@ async function showAnalysisResults(resultData, analysisId = null) {
   const labels = llm.labels || [];
   const evidence = llm.evidence || [];
 
-  // Clases para el badge de veredicto
   const verdictClass =
     verdict === "falsa"
       ? "verdict-badge verdict-falsa"
@@ -182,11 +178,13 @@ async function showAnalysisResults(resultData, analysisId = null) {
       ? "verdict-badge verdict-no-verificable"
       : "verdict-badge verdict-creible";
 
-  // Clases para la barra de score
   const scoreClass =
-    score < 30 ? "score-bar-inner score-bad" : score < 60 ? "score-bar-inner score-medium" : "score-bar-inner score-good";
+    score < 30
+      ? "score-bar-inner score-bad"
+      : score < 60
+      ? "score-bar-inner score-medium"
+      : "score-bar-inner score-good";
 
-  // Confianza → clases de CSS (alta/media/baja → high/medium/low)
   let confidenceClass = "medium-confidence";
   if (explanations.confidence === "alta") confidenceClass = "high-confidence";
   else if (explanations.confidence === "baja") confidenceClass = "low-confidence";
@@ -206,9 +204,9 @@ async function showAnalysisResults(resultData, analysisId = null) {
 
       <div class="score-bar">
         <div class="${scoreClass}" style="width:${Math.max(
-    0,
-    Math.min(score, 100)
-  )}%;"></div>
+          0,
+          Math.min(score, 100)
+        )}%;"></div>
       </div>
 
       ${
@@ -427,7 +425,7 @@ function getFactorEmoji(factor) {
 }
 
 // =========================
-// Feedback / Aprendizaje continuo (HU?? extra)
+// Feedback / Aprendizaje continuo
 // =========================
 function initFeedbackFeatures(analysisId, currentScore, currentVerdict) {
   const btnOk = $("#btnFeedbackOk");
@@ -662,6 +660,51 @@ document
   });
 
 // =========================
+// Entrenar modelo local (usa dataset.json)
+// =========================
+document
+  .getElementById("btnTrainML")
+  ?.addEventListener("click", async function () {
+    const btn = this;
+    const status = document.getElementById("trainMLStatus");
+
+    btn.disabled = true;
+    const prevText = btn.textContent;
+    btn.textContent = "🔄 Entrenando modelo...";
+    if (status) status.textContent = "Entrenando modelo local con dataset.json...";
+
+    try {
+      const res = await fetch(API + "/train-ml", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const json = await res.json();
+
+      if (json.ok) {
+        if (status) {
+          status.textContent =
+            json.message ||
+            "✅ Entrenamiento completado. El modelo local fue actualizado.";
+        }
+        // refrescamos estado del sistema para que /ml-status muestre el nuevo modelo
+        updateSystemStatus();
+      } else {
+        if (status) {
+          status.textContent =
+            "⚠️ Error entrenando el modelo: " + (json.error || "Error desconocido");
+        }
+      }
+    } catch (err) {
+      console.error("❌ Error al entrenar modelo:", err);
+      if (status) status.textContent = "⚠️ No se pudo conectar al backend.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = prevText;
+    }
+  });
+
+// =========================
 // Historial + Métricas (HU05, HU09)
 // =========================
 async function loadHistory(q = "") {
@@ -701,8 +744,8 @@ async function loadHistory(q = "") {
           <td>${x.title || "—"}</td>
           <td style="font-weight:600;color:${scoreColor}">${scoreNum}</td>
           <td><span class="verdict-chip" style="background:${verdictColor}">${String(
-          verdict
-        ).toUpperCase()}</span></td>
+            verdict
+          ).toUpperCase()}</span></td>
           <td>${(x.labels || []).join(", ")}</td>
           <td>${x.rationale || "—"}</td>
         </tr>
@@ -720,7 +763,6 @@ async function loadHistory(q = "") {
       <p class="muted">Total: ${json.total}</p>
     `;
 
-    // Ganchos para HU11 (comparación) – solo si existe el panel
     initComparisonHooks(arr);
   } catch (e) {
     console.error(e);
@@ -737,7 +779,7 @@ function renderMetrics(items) {
   const lat = total
     ? items.reduce((s, x) => s + (Number(x.latency_ms) || 0), 0) / total
     : 0;
-  const high = items.filter((x) => (Number(x.score) || 0) < 30).length; // críticas
+  const high = items.filter((x) => (Number(x.score) || 0) < 30).length;
 
   const counts = items.reduce(
     (acc, x) => {
@@ -762,20 +804,19 @@ function renderMetrics(items) {
 }
 
 // =========================
-// HU11 (parcial): ganchos para comparación de noticias
+// HU11: ganchos para comparación de noticias
 // =========================
 function initComparisonHooks(items) {
   const panel = document.getElementById("comparisonPanel");
-  if (!panel) return; // si aún no tienes esta sección en el HTML, no pasa nada
+  if (!panel) return;
 
-  // Ejemplo mínimo: mostrar las dos últimas noticias en el panel de comparación
   if (items.length < 2) {
     panel.innerHTML =
       '<p class="muted">Analiza al menos dos noticias para habilitar la comparación.</p>';
     return;
   }
 
-  const [a, b] = items.slice(0, 2); // las más recientes
+  const [a, b] = items.slice(0, 2);
 
   panel.innerHTML = `
     <div class="comparison-panel">

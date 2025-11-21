@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import Groq from "groq-sdk";               // 👈 ahora usamos Groq
+import Groq from "groq-sdk"; // 👈 ahora usamos Groq
 import fs from "fs-extra";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +10,12 @@ import multer from "multer";
 import csv from "csv-parser";
 import xlsx from "xlsx";
 import { spawn } from "node:child_process";
+import {
+  insertAnalysis,
+  getAnalyses,
+  insertDatasetRows,
+  insertFeedback,
+} from "./db.js";
 
 console.log("🔎 Iniciando servidor...");
 
@@ -226,7 +232,7 @@ async function analyzeWithLocalML(newsData, geminiResult) {
   });
 }
 
-// --- Función para procesar dataset ---
+// --- Función para procesar dataset (no usada por ahora, pero la dejamos) ---
 async function processDataset(records, res, filePath) {
   try {
     await fs.ensureDir(DATA_DIR);
@@ -319,11 +325,20 @@ app.post("/upload-dataset", upload.single("file"), async (req, res) => {
     const updated = [...existing, ...newData];
     fs.writeFileSync(targetFile, JSON.stringify(updated, null, 2), "utf-8");
 
+    // 🔹 Además de guardar en JSON, si tiene etiqueta, lo mandamos a la BD
+    if (hasEtiqueta) {
+      try {
+        insertDatasetRows(newData);
+      } catch (dbErr) {
+        console.error("⚠️ Error guardando dataset en SQLite:", dbErr);
+      }
+    }
+
     fs.unlinkSync(filePath);
 
     res.json({
       message: hasEtiqueta
-        ? "✅ Dataset con etiquetas guardado en dataset.json"
+        ? "✅ Dataset con etiquetas guardado en dataset.json y SQLite"
         : "✅ Dataset normal guardado en data.json",
       totalRegistros: newData.length,
       destino: hasEtiqueta ? "dataset.json" : "data.json",
@@ -331,6 +346,55 @@ app.post("/upload-dataset", upload.single("file"), async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al procesar el dataset");
+  }
+});
+
+// 🔹 Endpoint para entrenar el modelo con dataset.json (coincide con /train-ml del frontend)
+app.post("/train-ml", async (_req, res) => {
+  try {
+    console.log("🧠 Iniciando entrenamiento del modelo ML local...");
+
+    const scriptPath = path.join(__dirname, "ml", "train_model.py");
+
+    const py = spawn("python", [scriptPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    py.stdout.on("data", (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    py.stderr.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    py.on("close", (code) => {
+      if (code !== 0) {
+        console.error("❌ Error entrenando modelo. Código:", code);
+        console.error("STDERR:\n", stderr);
+        return res.status(500).json({
+          ok: false,
+          message: "Error al entrenar el modelo",
+          code,
+          stderr,
+        });
+      }
+
+      console.log("✅ Entrenamiento completado correctamente.");
+      console.log("📄 Salida de train_model.py:\n", stdout);
+
+      return res.json({
+        ok: true,
+        message: "Modelo entrenado correctamente",
+        details: stdout, // aquí viene el classification_report si lo imprimes en Python
+      });
+    });
+  } catch (error) {
+    console.error("💥 Excepción en /train-ml:", error);
+    res.status(500).json({ ok: false, error: error.message });
   }
 });
 
@@ -353,6 +417,13 @@ app.post("/feedback", async (req, res) => {
         user_feedback,
         timestamp: new Date().toISOString(),
       };
+
+      // 🔹 Guardar también en SQLite
+      try {
+        insertFeedback(feedbackData);
+      } catch (dbErr) {
+        console.error("⚠️ Error guardando feedback en SQLite:", dbErr);
+      }
 
       const feedbackPath = path.join(__dirname, "data", "feedback_logs.json");
       let existingFeedback = [];
@@ -398,7 +469,11 @@ async function appendRow(row) {
   const arr = await readAll();
   arr.push(row);
   await fs.ensureDir(DATA_DIR);
-  await fs.writeFile(DATA_DIR + "/data.json", JSON.stringify(arr, null, 2), "utf8");
+  await fs.writeFile(
+    DATA_DIR + "/data.json",
+    JSON.stringify(arr, null, 2),
+    "utf8"
+  );
   return row;
 }
 
@@ -407,7 +482,14 @@ app.get("/", (_req, res) =>
   res.json({
     ok: true,
     msg: "API Desinfo viva + ML local + Groq LLaMA",
-    features: ["groq_llama3", "local_ml", "datasets", "history", "export"],
+    features: [
+      "groq_llama3",
+      "local_ml",
+      "datasets",
+      "history",
+      "export",
+      "train_ml",
+    ],
   })
 );
 
@@ -658,7 +740,15 @@ EJECUTA TU RAZONAMIENTO INTERNAMENTE Y RESPONDE SOLO CON EL JSON.
       combination_flags: combinedDecision.flags,
     };
 
+    // JSON (para mantener compatibilidad con el ML / calibración)
     await appendRow(row);
+
+    // SQLite (para cumplir al docente y mejorar consultas)
+    try {
+      insertAnalysis(row);
+    } catch (dbErr) {
+      console.error("⚠️ Error guardando análisis en SQLite:", dbErr);
+    }
 
     console.log(`🎯 Análisis completado en ${Date.now() - analysisStart}ms`);
 
@@ -682,23 +772,55 @@ app.get("/history", async (req, res) => {
   try {
     const { q = "", limit = "100" } = req.query;
     const max = Math.min(parseInt(limit, 10) || 100, 1000);
-    const all = await readAll();
-
     const term = String(q).toLowerCase();
-    const filtered = term
-      ? all.filter(
-          (x) =>
-            (x.title || "").toLowerCase().includes(term) ||
-            (x.source || "").toLowerCase().includes(term) ||
-            (x.body || "").toLowerCase().includes(term)
-        )
-      : all;
 
-    filtered.sort((a, b) => (b.id || 0) - (a.id || 0));
+    let items = [];
+    try {
+      // 🔹 Intentar leer desde SQLite
+      const dbRows = getAnalyses({ q: term, limit: max });
+      items = dbRows.map((r) => ({
+        id: r.id,
+        source: r.source,
+        title: r.title,
+        body: r.body,
+        score: r.score,
+        verdict: r.verdict,
+        labels: r.labels_json ? JSON.parse(r.labels_json) : [],
+        rationale: r.rationale,
+        evidence: r.evidence_json ? JSON.parse(r.evidence_json) : [],
+        explanation: r.explanation,
+        gemini_score: r.gemini_score,
+        ml_score: r.ml_score,
+        ml_verdict: r.ml_verdict,
+        model: r.model,
+        latency_ms: r.latency_ms,
+        created_at: r.created_at,
+        combination_flags: r.combination_flags_json
+          ? JSON.parse(r.combination_flags_json)
+          : [],
+      }));
+    } catch (dbErr) {
+      console.error("[/history] Error leyendo desde SQLite, usando JSON:", dbErr);
+
+      // 🔸 Fallback a JSON
+      const all = await readAll();
+      const filtered = term
+        ? all.filter(
+            (x) =>
+              (x.title || "").toLowerCase().includes(term) ||
+              (x.source || "").toLowerCase().includes(term) ||
+              (x.body || "").toLowerCase().includes(term)
+          )
+        : all;
+
+      filtered.sort((a, b) => (b.id || 0) - (a.id || 0));
+      items = filtered.slice(0, max);
+    }
+
     res.json({
       ok: true,
-      items: filtered.slice(0, max),
-      total: filtered.length,
+      items,
+      total: items.length,
     });
   } catch (e) {
     console.error("[/history] Error:", e);
@@ -1049,12 +1171,17 @@ try {
   app.listen(PORT, () => {
     console.log("✅ API en puerto", PORT);
     console.log("🤖 Integración ML local activa (Python en backend/ml)");
-    console.log("🧠 LLM externo: Groq LLaMA 3.1 8B (si GROQ_API_KEY está configurada)");
+    console.log(
+      "🧠 LLM externo: Groq LLaMA 3.1 8B (si GROQ_API_KEY está configurada)"
+    );
     console.log("📊 Endpoints disponibles:");
     console.log("   POST /analyze          - Análisis con Groq LLaMA + ML local");
+    console.log("   POST /train-ml         - Entrenar modelo ML local con dataset.json");
     console.log("   GET  /ml-status        - Estado del modelo local");
     console.log("   POST /upload-dataset   - Subir datasets");
-    console.log("   GET  /history          - Historial de análisis");
+    console.log(
+      "   GET  /history          - Historial de análisis (SQLite + JSON fallback)"
+    );
     console.log("   GET  /export/csv       - Exportar datos");
     console.log("   POST /calibrate        - HU07: Calibración del sistema");
     console.log("   GET  /calibration-logs - HU07: Logs de calibración");

@@ -192,6 +192,7 @@
             y para alimentar los procesos de calibración automática.
           </p>
           
+          <!-- SUBIR DATASET -->
           <div class="form-group">
             <label for="datasetFile" class="form-label">Seleccionar archivo</label>
             <input
@@ -204,6 +205,20 @@
           
           <button id="btnUploadDataset" class="submit-btn">Cargar Dataset</button>
           <p id="uploadMessage" class="muted"></p>
+
+          <hr style="margin: 2rem 0; opacity: 0.3;">
+
+          <!-- 🟩 NUEVA SECCIÓN: Entrenamiento de ML -->
+          <h2>Entrenar Modelo Local (ML)</h2>
+          <p class="card-subtitle">
+            Usa el archivo <strong>dataset.json</strong> para reentrenar el modelo local 
+            (<code>model.joblib</code>). Esto mejora la precisión del verificador híbrido.
+          </p>
+
+          <button id="btnTrainML" class="submit-btn">🔁 Entrenar Modelo Local</button>
+
+          <!-- Mensaje de estado del entrenamiento -->
+          <p id="trainMLStatus" class="muted"></p>
         </div>
       </section>
 

@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "@google/genai": "^0.3.0",
+    "better-sqlite3": "^12.4.5",
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",

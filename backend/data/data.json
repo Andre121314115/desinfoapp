@@ -91,5 +91,136 @@
     "combination_flags": [
       "llm_predomina"
     ]
+  },
+  {
+    "id": 1763703218237,
+    "source": "Portal Congreso de la República",
+    "title": "José Jerí Oré asume como presidente de la república tras la vacancia de Dina Boluarte",
+    "body": "Centro de Noticias del Congreso\n\n10 Oct 2025 | 1:44 h\n\n\nA la una de la madrugada de hoy, tras una intensa y ardua jornada, José Enrique Jerí Oré juró ante el Pleno del Congreso como presidente de la república tras la aprobación de la vacancia de Dina Boluarte Zegarra, ahora exmandataria.\n\n“Asumo de acuerdo con la Constitución Política del Perú, desde este momento, hasta el 28 de julio 2026, que defenderé mi país, la soberanía nacional, la integridad física y moral de nuestro país, de nuestra república, la independencia de nuestras instituciones democráticas, que cumpliré y haré cumplir nuestra Constitución Política, las leyes de nuestro país, y las libertades de nuestra república”, expresó Jerí Oré en su juramento.\n\n\n\nDurante su discurso de orden, Jerí Oré anunció que asume con humildad la presidencia de la república por sucesión constitucional, “para instalar y dirigir un gobierno de empatía y de reconciliación nacional de amplia base y para el cual tenemos que construir, juntos, acuerdos mínimos”.\n\nSostuvo que el Perú atraviesa una crisis política constante que pareciera no tener fin por gobiernos que no terminan su mandato, instituciones debilitadas y una ciudadanía cansada.\n\nEl mandatario pidió perdón a la población por los errores que se han podido cometer. “A todos ellos las disculpas del caso y una promesa: La promesa de comenzar a construir, sentar las bases de un país que permita, justamente, generar una reconciliación entre todos los peruanos. Debemos sembrar esas bases el día de hoy”, dijo.\n\n\n\nGuerra contra la delincuencia\nEn otro momento, Jerí Oré anunció la declaratoria de guerra contra la delincuencia, convertida hoy en el principal problema del país.\n\n“Para ello tenemos a la Policía Nacional, nuestras Fuerzas Armadas y debemos tener el compromiso de las instituciones del Estado, del Poder Judicial, de la Fiscalía de la Nación, para no solo declararle la guerra a la delincuencia y ganarle la guerra de una vez por todas”, enfatizó.\n\nJerí Oré también asumió el compromiso de garantizar con transparencia la legalidad, limpieza, orden y neutralidad del próximo proceso electoral.\n\n“Hoy estamos en la mira de todo el mundo, no solamente por la sucesión constitucional que acabamos de evidenciar, sino porque, justamente, nuestro país tiene esa oportunidad para ser el país que siempre debió ser en el continente”, sentenció.",
+    "score": 72,
+    "verdict": "verdadera",
+    "labels": [
+      "coherencia_fechas",
+      "reputacion_fuente"
+    ],
+    "rationale": "La noticia se basa en un evento real y la fuente es un portal oficial del Congreso de la República, aunque hay algunas declaraciones del presidente que pueden ser subjetivas.",
+    "evidence": [
+      {
+        "claim": "José Enrique Jerí Oré juró ante el Pleno del Congreso como presidente de la república tras la aprobación de la vacancia de Dina Boluarte Zegarra",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.congreso.gob.pe/"
+        ]
+      },
+      {
+        "claim": "El presidente anunció la declaratoria de guerra contra la delincuencia",
+        "assessment": "compatible",
+        "sources": [
+          "https://www.congreso.gob.pe/"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 80,
+    "ml_score": 53,
+    "ml_verdict": "falsa",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 2662,
+    "created_at": "2025-11-21T05:33:38.237Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (72/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "llm_predomina"
+    ]
+  },
+  {
+    "id": 1763705792277,
+    "source": "Andina",
+    "title": "José Jeri asume la presidencia del Perú tras destitución de Boluarte",
+    "body": "El Congreso aprobó la vacancia presidencial y José Jeri asumió el mando inmediatamente el 10 de octubre de 2025.",
+    "score": 40,
+    "verdict": "dudosa",
+    "labels": [
+      "inexactitud en fecha",
+      "falta de contexto"
+    ],
+    "rationale": "La noticia presenta una fecha inconsistente con la realidad actual, ya que la fecha mencionada (10 de octubre de 2025) no coincide con la fecha de la actualización de la información.",
+    "evidence": [
+      {
+        "claim": "El Congreso aprobó la vacancia presidencial y José Jeri asumió el mando inmediatamente el 10 de octubre de 2025.",
+        "assessment": "no_verificable",
+        "sources": [
+          "https://www.andina.com.pe/agencia/noticia-jose-jeri-asume-presidencia-peru-tras-destitucion-boluarte-2025-10-10/"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 20,
+    "ml_score": 60,
+    "ml_verdict": "verdadera",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 2480,
+    "created_at": "2025-11-21T06:16:32.277Z",
+    "explanations": {
+      "simple": "🟡 La información presenta señales de alerta y requiere verificación.",
+      "detailed": "**Puntaje medio (40/100):** Se encontraron contradicciones o falta de transparencia en las fuentes. Se recomienda consultar medios establecidos antes de compartir.\n\n**Recomendación:** ⚠️ Verificar con otras fuentes antes de compartir",
+      "factors": [],
+      "recommendation": "⚠️ Verificar con otras fuentes antes de compartir",
+      "confidence": "baja"
+    },
+    "combination_flags": [
+      "fallback_promedio"
+    ]
+  },
+  {
+    "id": 1763705831429,
+    "source": "Andina",
+    "title": "José Jeri asume la presidencia del Perú tras destitución de Boluarte",
+    "body": "",
+    "score": 76,
+    "verdict": "verdadera",
+    "labels": [
+      "politica",
+      "actualidad"
+    ],
+    "rationale": "La noticia se basa en información oficial y reportes de medios confiables, aunque hay algunas inconsistencias en la fecha de la destitución de Boluarte.",
+    "evidence": [
+      {
+        "claim": "José Jeri asume la presidencia del Perú tras destitución de Boluarte",
+        "assessment": "compatible",
+        "sources": [
+          "https://andina.pe/agencia/noticia-jose-jeri-asume-presidencia-peru-tras-destitucion-boluarte-2024-01-22-00-00-00/"
+        ]
+      },
+      {
+        "claim": "La destitución de Boluarte",
+        "assessment": "no_verificable",
+        "sources": [
+          "https://elpais.com/internacional/2024-01-22/peru-destituyen-a-dina-boluarte-y-jose-jeri-asume-la-presidencia.html"
+        ]
+      }
+    ],
+    "explanation": "Análisis combinado por reglas: Groq LLaMA + ML local (local_ml_logreg_tfidf)",
+    "gemini_score": 80,
+    "ml_score": 58,
+    "ml_verdict": "verdadera",
+    "model": "groq-llama-3.1-8b-instant + local-logreg-tfidf",
+    "latency_ms": 2519,
+    "created_at": "2025-11-21T06:17:11.429Z",
+    "explanations": {
+      "simple": "🟢 La noticia parece confiable y bien fundamentada.",
+      "detailed": "**Puntaje alto (76/100):** La información coincide con fuentes verificables y presenta datos consistentes. Puede considerarse confiable.\n\n**Recomendación:** ✅ Puede compartirse con confianza",
+      "factors": [],
+      "recommendation": "✅ Puede compartirse con confianza",
+      "confidence": "media"
+    },
+    "combination_flags": [
+      "consenso_verdadera"
+    ]
   }
 ]
